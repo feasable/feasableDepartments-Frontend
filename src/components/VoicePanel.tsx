@@ -73,12 +73,23 @@ export default function VoicePanel() {
 
     try {
       await vapi.start({
-        assistantId: selectedAssistant.id,
+        assistant: {
+          name: selectedAssistant.name,
+          model: {
+            provider: 'openai',
+            model: 'gpt-3.5-turbo'
+          },
+          voice: {
+            provider: 'playht',
+            voiceId: 'jennifer'
+          },
+          firstMessage: `Hi! I'm your ${selectedAssistant.name} assistant. How can I help you today?`
+        },
         metadata: {
           userName: 'User', // TODO: Get from auth
           department: selectedAssistant.department
         }
-      })
+      } as any)
     } catch (error) {
       console.error('Failed to start call:', error)
       toast.error('Failed to connect to assistant')

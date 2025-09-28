@@ -4,14 +4,15 @@
 
 @layer base {
   :root {
+    /* Light mode - refined monochrome with subtle blue */
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 200 18% 46%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
     --muted: 0 0% 96.1%;
@@ -22,19 +23,20 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --radius: 0.5rem;
+    --ring: 200 18% 46%;
+    --radius: 0.75rem;
   }
 
   .dark {
+    /* Dark mode - refined monochrome with subtle blue */
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+    --primary: 200 18% 46%;
+    --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
@@ -45,96 +47,94 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    --ring: 200 18% 46%;
   }
 }
 
 @layer base {
   * {
-    /* Fallback: set a default border color via CSS variable to avoid @apply resolution issues */
-    border-color: hsl(var(--border));
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Sketch aesthetic */
-.sketch-border {
-  position: relative;
-  border: 2px solid currentColor;
-  border-radius: 0.25rem;
+/* Custom animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
 }
 
-.sketch-border::before,
-.sketch-border::after {
-  content: '';
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  border: 2px solid currentColor;
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.sketch-border::before {
-  top: -6px;
-  left: -6px;
-  border-right: none;
-  border-bottom: none;
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
 }
 
-.sketch-border::after {
-  bottom: -6px;
-  right: -6px;
-  border-left: none;
-  border-top: none;
-}
-
-/* Grid background */
-.grid-bg {
-  background-image: 
-    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-  background-size: 30px 30px;
-}
-
-/* Department cards */
-.department-card {
-  @apply relative overflow-hidden transition-all duration-300;
-  @apply hover:translate-y-[-2px] hover:shadow-lg;
-}
-
-.department-card::after {
-  content: '→';
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.5rem;
-  opacity: 0.5;
-  transition: all 0.3s ease;
-}
-
-.department-card:hover::after {
-  transform: translateY(-50%) translateX(3px);
-  opacity: 1;
-}
-
-/* Voice button pulse */
-.voice-active {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
     opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
+    transform: translateY(0);
   }
 }
 
-/* Notification badge */
-.notification-badge {
-  @apply absolute -top-1 -right-1 h-3 w-3 rounded-full bg-red-500;
-  @apply animate-pulse;
+/* Glass morphism utilities */
+@layer utilities {
+  .glass {
+    @apply bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 dark:border-white/10;
+  }
+  
+  .glass-card {
+    @apply glass rounded-2xl shadow-2xl;
+  }
+  
+  .gradient-border {
+    @apply relative;
+    background-clip: padding-box;
+    border: solid 2px transparent;
+  }
+  
+  .gradient-border:before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    margin: -2px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #ffc837 100%);
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-primary;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 15s ease infinite;
+  }
+  
+  .shimmer {
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+  
+  .fade-up {
+    animation: fade-up 0.5s ease-out;
+  }
 }

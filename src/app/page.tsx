@@ -1,248 +1,273 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 import Link from 'next/link'
-import VoicePanel from '@/components/VoicePanel'
-import DepartmentCard from '@/components/DepartmentCard'
-import { createClient } from '@/lib/supabase/client'
+import Image from 'next/image'
+import { ArrowRight, Sparkles, Zap, Shield, Users, BarChart3, MessageSquare } from 'lucide-react'
+import VerticalBarsFixed from '@/components/ui/vertical-bars-fixed'
+import InteractiveDemo from '@/components/home/InteractiveDemo'
 
-const DEPARTMENTS = [
-  {
-    id: 'project_management',
-    title: 'Project Management',
-    description: 'Task breakdown, timeline management, and resource allocation',
-    icon: '📋',
-    href: '/departments/project-management',
-    status: 'active' as const
-  },
-  {
-    id: 'marketing',
-    title: 'Marketing',
-    description: 'Content creation, campaign planning, and social media',
-    icon: '🎨',
-    href: '/departments/marketing',
-    status: 'active' as const
-  },
-  {
-    id: 'data_analytics',
-    title: 'Data Analytics',
-    description: 'Reports, insights, and data visualization',
-    icon: '📊',
-    href: '/departments/data-analytics',
-    status: 'beta' as const
-  },
-  {
-    id: 'finance',
-    title: 'Finance',
-    description: 'Invoicing, expense tracking, and financial reports',
-    icon: '💰',
-    href: '/departments/finance',
-    status: 'coming_soon' as const
-  },
-  {
-    id: 'operations',
-    title: 'Operations',
-    description: 'Process optimization and workflow automation',
-    icon: '⚙️',
-    href: '/departments/operations',
-    status: 'coming_soon' as const
-  },
-  {
-    id: 'risk',
-    title: 'Risk & Compliance',
-    description: 'Risk assessment and regulatory compliance',
-    icon: '🛡️',
-    href: '/departments/risk',
-    status: 'coming_soon' as const
-  }
-]
+export default function Home() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end']
+  })
+  
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.6])
 
-export default function HomePage() {
-  const [user, setUser] = useState<any>(null)
-  const [taskCounts, setTaskCounts] = useState<Record<string, number>>({})
-
-  useEffect(() => {
-    // Check auth status
-    const supabase = createClient()
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-    })
-
-    // Subscribe to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
+  const departments = [
+    {
+      icon: <Users className="w-6 h-6" />,
+      title: 'Project Management',
+      desc: 'Task breakdown, timeline management, and resource allocation',
+      color: 'from-blue-400 to-cyan-400'
+    },
+    {
+      icon: <MessageSquare className="w-6 h-6" />,
+      title: 'Marketing',
+      desc: 'Content creation, campaign planning, and social media',
+      color: 'from-purple-400 to-pink-400'
+    },
+    {
+      icon: <BarChart3 className="w-6 h-6" />,
+      title: 'Data Analytics',
+      desc: 'Reports, insights, and data visualization',
+      color: 'from-green-400 to-emerald-400',
+      beta: true
+    },
+    {
+      icon: <Shield className="w-6 h-6" />,
+      title: 'Finance',
+      desc: 'Invoicing, expense tracking, and financial reports',
+      color: 'from-orange-400 to-red-400',
+      soon: true
+    }
+  ]
 
   return (
-    <div className="min-h-screen grid-bg">
-      {/* Header */}
-      <header className="border-b-2 border-border bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-xl font-bold font-mono">feasableDepartments</h1>
-              <span className="text-xs text-muted-foreground">by feasableLabs</span>
-            </div>
-            <nav className="flex items-center space-x-4">
-              {user ? (
-                <>
-                  <Link href="/dashboard" className="text-sm font-mono hover:text-primary">
-                    Dashboard
-                  </Link>
-                  <Link href="/tasks" className="text-sm font-mono hover:text-primary">
-                    Tasks
-                  </Link>
-                  <Link href="/settings" className="text-sm font-mono hover:text-primary">
-                    Settings
-                  </Link>
-                  <button className="px-4 py-2 text-sm font-mono border-2 border-border rounded hover:border-primary">
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link href="/login" className="text-sm font-mono hover:text-primary">
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/signup"
-                    className="px-4 py-2 text-sm font-mono bg-primary text-primary-foreground rounded hover:bg-primary/90"
-                  >
-                    Get Started
-                  </Link>
-                </>
-              )}
-            </nav>
-          </div>
-        </div>
-      </header>
-
+    <div ref={containerRef} className="min-h-screen bg-background overflow-hidden">
+      {/* Fixed Animated Background */}
+      <VerticalBarsFixed 
+        backgroundColor="#030712" 
+        lineColor="#1f2937" 
+        barColor="#6366f1" 
+        animationSpeed={0.0003}
+      />
+      
+      {/* Subtle Overlay for better text contrast */}
+      <div className="fixed inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background/60 pointer-events-none" />
+      
       {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-5xl font-bold font-mono mb-4">
-            AI Departments That Work Like Humans
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Delegate tasks to specialized AI assistants via voice or text. 
+      <section className="relative min-h-screen flex items-center justify-center px-6 pt-20">
+
+        <div className="relative z-10 max-w-5xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8"
+          >
+            <Sparkles className="w-4 h-4 text-yellow-500" />
+            <span className="text-sm font-medium">AI-powered departments for modern teams</span>
+          </motion.div>
+          
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-5xl md:text-7xl font-bold mb-6"
+          >
+            AI Departments That
+            <span className="text-gradient"> Work Like Humans</span>
+          </motion.h1>
+          
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto"
+          >
+            Delegate tasks to specialized AI assistants via voice or text.
             They'll handle your business operations autonomously.
-          </p>
-          {!user && (
-            <div className="flex items-center justify-center space-x-4">
-              <Link
-                href="/signup"
-                className="px-6 py-3 bg-primary text-primary-foreground rounded-md font-mono font-bold hover:bg-primary/90"
-              >
-                Start Free Trial
-              </Link>
-              <Link
-                href="/demo"
-                className="px-6 py-3 border-2 border-border rounded-md font-mono font-bold hover:border-primary"
-              >
-                Watch Demo
-              </Link>
-            </div>
-          )}
+          </motion.p>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <Link
+              href="/signup"
+              className="group px-8 py-4 bg-primary text-primary-foreground rounded-full font-medium hover:shadow-2xl hover:shadow-primary/25 transition-all"
+            >
+              Start Free Trial
+              <ArrowRight className="inline ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              href="#demo"
+              className="px-8 py-4 glass rounded-full font-medium hover:bg-white/20 dark:hover:bg-white/10 transition-all"
+            >
+              Watch Demo
+            </Link>
+          </motion.div>
         </div>
+        
+        {/* Floating animation element */}
+        <motion.div
+          animate={{
+            y: [0, -20, 0],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+        >
+          <div className="w-6 h-10 border-2 border-muted-foreground/30 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-muted-foreground/30 rounded-full mt-2 animate-bounce" />
+          </div>
+        </motion.div>
       </section>
 
-      {/* Main Content */}
-      <section className="py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Departments Grid */}
-            <div className="lg:col-span-2">
-              <h3 className="text-2xl font-bold font-mono mb-6">Available Departments</h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                {DEPARTMENTS.map((dept) => (
-                  <DepartmentCard
-                    key={dept.id}
-                    {...dept}
-                    tasks={taskCounts[dept.id] || 0}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Voice Panel */}
-            <div className="lg:col-span-1">
-              <h3 className="text-2xl font-bold font-mono mb-6">Quick Actions</h3>
-              <VoicePanel />
-              
-              {/* Stats */}
-              <div className="mt-8 p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg sketch-border">
-                <h4 className="font-mono font-bold mb-4">Your Stats</h4>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Tasks Created</span>
-                    <span className="font-mono font-bold">0</span>
+      {/* Available Departments */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Available Departments</h2>
+            <p className="text-xl text-muted-foreground">Choose your AI team members</p>
+          </motion.div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {departments.map((dept, i) => (
+              <motion.div
+                key={dept.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className={`group relative p-6 rounded-2xl glass-card hover:scale-105 transition-all cursor-pointer ${
+                  dept.soon ? 'opacity-60' : ''
+                }`}
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${dept.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity`} />
+                <div className="relative">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={`p-3 rounded-xl bg-gradient-to-br ${dept.color} text-white`}>
+                      {dept.icon}
+                    </div>
+                    {dept.beta && (
+                      <span className="px-2 py-1 text-xs bg-blue-500/10 text-blue-500 rounded-full">BETA</span>
+                    )}
+                    {dept.soon && (
+                      <span className="px-2 py-1 text-xs bg-gray-500/10 text-gray-500 rounded-full">SOON</span>
+                    )}
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Tasks Completed</span>
-                    <span className="font-mono font-bold">0</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Voice Interactions</span>
-                    <span className="font-mono font-bold">0</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Time Saved</span>
-                    <span className="font-mono font-bold">0h</span>
-                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{dept.title}</h3>
+                  <p className="text-muted-foreground">{dept.desc}</p>
                 </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Demo Section */}
+      <InteractiveDemo />
+
+      {/* Quick Actions Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Choose FeasableDepartments</h2>
+            <p className="text-xl text-muted-foreground">Everything you need to scale your business</p>
+          </motion.div>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white">
+                <Zap className="w-8 h-8" />
               </div>
-            </div>
+              <h3 className="font-semibold mb-2">Instant Setup</h3>
+              <p className="text-sm text-muted-foreground">No complex configuration needed</p>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-center"
+            >
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white">
+                <MessageSquare className="w-8 h-8" />
+              </div>
+              <h3 className="font-semibold mb-2">Voice or Text</h3>
+              <p className="text-sm text-muted-foreground">Communicate naturally with your AI team</p>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-center"
+            >
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-400 to-emerald-400 flex items-center justify-center text-white">
+                <Shield className="w-8 h-8" />
+              </div>
+              <h3 className="font-semibold mb-2">Enterprise Security</h3>
+              <p className="text-sm text-muted-foreground">Your data is encrypted and secure</p>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-4 border-t-2 border-border">
-        <div className="max-w-7xl mx-auto">
-          <h3 className="text-3xl font-bold font-mono text-center mb-12">
-            How It Works
-          </h3>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="text-4xl mb-4">🎙️</div>
-              <h4 className="font-mono font-bold mb-2">1. Speak or Type</h4>
-              <p className="text-sm text-muted-foreground">
-                Tell your AI assistant what you need, just like talking to a colleague
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl mb-4">🤖</div>
-              <h4 className="font-mono font-bold mb-2">2. AI Processes</h4>
-              <p className="text-sm text-muted-foreground">
-                Specialized departments handle tasks with domain expertise
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl mb-4">✅</div>
-              <h4 className="font-mono font-bold mb-2">3. Get Results</h4>
-              <p className="text-sm text-muted-foreground">
-                Receive notifications when tasks are complete
-              </p>
-            </div>
-          </div>
-        </div>
+      {/* CTA Section */}
+      <section className="py-20 px-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto text-center p-12 rounded-3xl glass-card"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Ready to transform your workflow?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8">
+            Join thousands of teams already using AI departments
+          </p>
+          <Link
+            href="/signup"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full font-medium hover:shadow-2xl hover:shadow-primary/25 transition-all"
+          >
+            Get Started Free
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+          <p className="mt-4 text-sm text-muted-foreground">
+            No credit card required · 5 free messages
+          </p>
+        </motion.div>
       </section>
-
-      {/* Footer */}
-      <footer className="py-8 px-4 border-t-2 border-border">
-        <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
-          <p className="font-mono">© 2024 feasableLabs. All rights reserved.</p>
-          <div className="mt-4 space-x-4">
-            <Link href="/privacy" className="hover:text-primary">Privacy</Link>
-            <Link href="/terms" className="hover:text-primary">Terms</Link>
-            <Link href="/docs" className="hover:text-primary">Documentation</Link>
-            <Link href="mailto:support@feasable.org" className="hover:text-primary">Support</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
