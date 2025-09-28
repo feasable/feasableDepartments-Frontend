@@ -4,6 +4,7 @@ import './globals.css'
 import { Toaster } from 'sonner'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/ui/footer-section'
+import ScrollToTop from '@/components/ScrollToTop'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 const spaceMono = Space_Mono({ 
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceMono.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground flex flex-col min-h-screen">
+        <ScrollToTop />
         <Navbar />
         <main className="flex-1">
           {children}
