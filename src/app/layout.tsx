@@ -1,16 +1,22 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans, Space_Mono } from 'next/font/google'
+import { Inter, Instrument_Serif } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'sonner'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/ui/footer-section'
 import ScrollToTop from '@/components/ScrollToTop'
 
-const inter = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-sans' })
-const spaceMono = Space_Mono({ 
-  weight: ['400', '700'],
+const inter = Inter({ 
+  subsets: ['latin'], 
+  variable: '--font-sans',
+  display: 'swap',
+})
+
+const instrumentSerif = Instrument_Serif({ 
+  weight: '400',
   subsets: ['latin'],
-  variable: '--font-mono' 
+  variable: '--font-serif',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -24,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground flex flex-col min-h-screen">
         <ScrollToTop />
         <Navbar />

@@ -6,6 +6,13 @@ import { getBusinessId } from '@/lib/tenant'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { SegmentedControl } from '@/components/ui/segmented-control'
+import { CardSkeleton } from '@/components/ui/skeleton'
+import { GlassButton } from '@/components/ui/glass-button'
+import { TaskCard } from '@/components/ui/task-card'
+import { createClient } from '@/lib/supabase/client'
+import { ensureUserBusiness } from '@/lib/auth-helpers'
+import { useRouter } from 'next/navigation'
 
 interface Task {
   id: string
@@ -17,20 +24,47 @@ interface Task {
 }
 
 export default function MarketingDepartmentPage() {
+  const router = useRouter()
   const [businessId, setBusinessId] = useState<string | null>(null)
   const [business, setBusiness] = useState<any>(null)
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(false)
+  const [loadingList, setLoadingList] = useState(true)
   const [form, setForm] = useState({ title: '', description: '', priority: 'medium' })
+  const [statusFilter, setStatusFilter] = useState<'all' | 'queued' | 'in_progress' | 'completed'>('all')
+  const [priorityFilter, setPriorityFilter] = useState<'all' | 'low' | 'medium' | 'high'>('all')
 
   useEffect(() => {
     const id = getBusinessId()
     setBusinessId(id)
   }, [])
 
+  // If no local businessId, try to ensure one for signed-in user; else redirect to login
+  useEffect(() => {
+    if (businessId !== null) return
+    const tryEnsure = async () => {
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        router.push('/login')
+        return
+      }
+      try {
+        const id = await ensureUserBusiness()
+        setBusinessId(id)
+      } catch (e) {
+        // Fallback: go to signup/login
+        router.push('/login')
+      }
+    }
+    tryEnsure()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [businessId])
+
   useEffect(() => {
     if (!businessId) return
     const run = async () => {
+      setLoadingList(true)
       try {
         const biz = await backend(`/v1/businesses/${businessId}`)
         setBusiness(biz)
@@ -40,12 +74,22 @@ export default function MarketingDepartmentPage() {
         setTasks(list.tasks || [])
       } catch (e: any) {
         toast.error(e?.message || 'Failed to load department')
+      } finally {
+        setLoadingList(false)
       }
     }
     run()
   }, [businessId])
 
   const canCreate = useMemo(() => form.title.trim().length >= 3 && form.description.trim().length >= 5, [form])
+
+  const filteredTasks = useMemo(() => {
+    return tasks.filter((t) => {
+      const statusOk = statusFilter === 'all' || t.status === statusFilter
+      const priorityOk = priorityFilter === 'all' || t.priority === priorityFilter
+      return statusOk && priorityOk
+    })
+  }, [tasks, statusFilter, priorityFilter])
 
   const create = async () => {
     if (!businessId) return toast.error('No business selected')
@@ -88,12 +132,15 @@ export default function MarketingDepartmentPage() {
   return (
     <div className="min-h-screen grid-bg py-10">
       <div className="max-w-5xl mx-auto px-4">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-mono font-bold">Marketing Department</h1>
-            <p className="text-sm text-muted-foreground">Plan: {business?.plan || 'free'} · Credits: {business?.message_credits ?? 0}</p>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-mono font-bold">Marketing Space</h1>
+              <p className="text-sm text-muted-foreground">Plan: {business?.plan || 'free'} · Credits: {business?.message_credits ?? 0}</p>
+            </div>
+            <Link href="/" className="text-sm text-muted-foreground hover:text-primary">← Home</Link>
           </div>
-          <Link href="/" className="text-sm text-muted-foreground hover:text-primary">← Home</Link>
+          <p className="mt-2 text-sm text-muted-foreground">Create tasks for content, campaigns, analytics. Save time by using templates below.</p>
         </motion.div>
 
         {/* Create task */}
@@ -123,31 +170,76 @@ export default function MarketingDepartmentPage() {
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
             />
           </div>
-          <div className="mt-4 flex justify-end">
-            <button
-              onClick={create}
-              disabled={!canCreate || loading}
-              className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-mono disabled:opacity-50"
-            >
-              {loading ? 'Creating…' : 'Create task'}
-            </button>
+          <div className="mt-4 flex items-center justify-between gap-4 flex-wrap">
+            {/* Templates */}
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {[
+                'Write a blog post on AI productivity',
+                'Create a 7-day launch plan for Product Hunt',
+                'Draft a 10-post Twitter thread about our MVP'
+              ].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setForm({ title: t, description: `Please: ${t}`, priority: 'medium' })}
+                  className="px-3 py-1.5 text-xs rounded-md border bg-background hover:bg-muted transition-colors"
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+            <GlassButton asChild size="sm">
+              <button onClick={create} disabled={!canCreate || loading} className="font-mono">
+                {loading ? 'Creating…' : 'Create task'}
+              </button>
+            </GlassButton>
           </div>
         </motion.div>
 
+        {/* Filters */}
+        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+          <SegmentedControl
+            options={[
+              { label: 'All', value: 'all' },
+              { label: 'Queued', value: 'queued' },
+              { label: 'In Progress', value: 'in_progress' },
+              { label: 'Completed', value: 'completed' },
+            ]}
+            value={statusFilter}
+            onChange={(v) => setStatusFilter(v as any)}
+          />
+          <SegmentedControl
+            options={[
+              { label: 'All', value: 'all' },
+              { label: 'Low', value: 'low' },
+              { label: 'Medium', value: 'medium' },
+              { label: 'High', value: 'high' },
+            ]}
+            value={priorityFilter}
+            onChange={(v) => setPriorityFilter(v as any)}
+          />
+        </div>
+
         {/* Tasks list */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid gap-4 md:grid-cols-2">
-          {tasks.map((t) => (
-            <div key={t.id} className="bg-white dark:bg-gray-900 sketch-border rounded-lg p-4">
-              <div className="flex items-center justify-between mb-1">
-                <h3 className="font-mono font-bold">{t.title}</h3>
-                <span className="text-xs px-2 py-0.5 rounded border border-border font-mono">{t.status}</span>
-              </div>
-              <p className="text-sm text-muted-foreground mb-2">{t.description}</p>
-              <div className="text-xs text-muted-foreground">Priority: {t.priority}</div>
-            </div>
+          {loadingList && (
+            <>
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+            </>
+          )}
+          {!loadingList && filteredTasks.map((t) => (
+            <TaskCard
+              key={t.id}
+              title={t.title}
+              description={t.description}
+              status={t.status}
+              priority={t.priority}
+              createdAt={t.created_at}
+            />
           ))}
-          {tasks.length === 0 && (
-            <div className="text-sm text-muted-foreground">No tasks yet. Create one above to get started.</div>
+          {!loadingList && filteredTasks.length === 0 && (
+            <div className="text-sm text-muted-foreground">No tasks match your filters. Try creating one above.</div>
           )}
         </motion.div>
       </div>

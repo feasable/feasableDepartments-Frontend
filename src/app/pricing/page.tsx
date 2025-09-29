@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import { Check, Sparkles, Building2, Rocket } from 'lucide-react'
 import Link from 'next/link'
-import { Navbar } from '@/components/layout/Navbar'
 import VerticalBarsNoise from '@/components/ui/vertical-bars'
 
 const plans = [
@@ -68,7 +67,6 @@ export default function PricingPage() {
         <VerticalBarsNoise backgroundColor="#0b0f1a" lineColor="#1f2937" barColor="#94a3b8" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/30" />
       </div>
-      <Navbar />
       
       {/* Hero */}
       <section className="pt-32 pb-20 px-6">
@@ -103,14 +101,14 @@ export default function PricingPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className={`relative rounded-2xl p-8 ${
+                className={`relative rounded-2xl p-8 bg-card transition-all duration-300 ${
                   plan.popular
-                    ? 'glass-card gradient-border scale-105'
-                    : 'glass-card'
+                    ? 'border-2 border-foreground shadow-xl scale-105'
+                    : 'border border-border hover:border-foreground/30 hover:shadow-lg'
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-foreground text-background rounded-full text-sm font-medium">
                     Most Popular
                   </div>
                 )}
@@ -118,19 +116,19 @@ export default function PricingPage() {
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
                   <div className="flex items-baseline gap-1 mb-4">
-                    <span className="text-4xl font-bold">{plan.price}</span>
+                    <span className="text-5xl font-bold">{plan.price}</span>
                     {plan.period && (
-                      <span className="text-muted-foreground">{plan.period}</span>
+                      <span className="text-muted-foreground text-lg">{plan.period}</span>
                     )}
                   </div>
-                  <p className="text-muted-foreground">{plan.description}</p>
+                  <p className="text-muted-foreground text-sm">{plan.description}</p>
                 </div>
                 
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-4 mb-8">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">{feature}</span>
+                      <Check className="w-5 h-5 text-foreground mt-0.5 flex-shrink-0" />
+                      <span className="text-sm leading-relaxed">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -139,8 +137,8 @@ export default function PricingPage() {
                   href={plan.href}
                   className={`block text-center py-3 px-6 rounded-full font-medium transition-all ${
                     plan.popular
-                      ? 'bg-primary text-primary-foreground hover:shadow-lg hover:shadow-primary/25'
-                      : 'glass hover:bg-white/20 dark:hover:bg-white/10'
+                      ? 'bg-foreground text-background hover:opacity-90'
+                      : 'border-2 border-foreground/20 hover:border-foreground hover:bg-foreground/5'
                   }`}
                 >
                   {plan.cta}

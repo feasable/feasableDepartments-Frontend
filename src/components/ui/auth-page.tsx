@@ -428,6 +428,13 @@ export function AuthPage({ mode = 'login', onModeChange }: AuthPageProps) {
                     Send Magic Link
                   </Button>
                 )}
+                {!isSignup && (
+                  <p className="text-xs text-center text-muted-foreground">
+                    <a href="/reset-password" className="hover:text-foreground underline underline-offset-4">
+                      Forgot password?
+                    </a>
+                  </p>
+                )}
               </div>
             </motion.form>
           </AnimatePresence>

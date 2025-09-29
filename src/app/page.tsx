@@ -59,12 +59,12 @@ export default function Home() {
       />
       
       {/* Subtle Overlay for better text contrast */}
-      <div className="fixed inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background/60 pointer-events-none" />
+      <div className="fixed inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/80 pointer-events-none" />
       
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-6 pt-20">
         {/* Waves background overlay for hero only */}
-        <div className="absolute inset-0 -z-0 pointer-events-none">
+        <div className="absolute inset-0 -z-0 pointer-events-none opacity-30">
           <Waves className="h-full w-full" lineColor="#64748b" backgroundColor="transparent" />
         </div>
 
@@ -73,9 +73,9 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-foreground/10 bg-background/50 backdrop-blur-sm mb-8"
           >
-            <Sparkles className="w-4 h-4 text-yellow-500" />
+            <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium">AI-powered departments for modern teams</span>
           </motion.div>
           
@@ -83,19 +83,19 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold mb-6"
+            className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
           >
-            AI Departments That
-            <span className="text-gradient"> Work Like Humans</span>
+            Agentic Departments That <br className="hidden md:block" />
+            <span className="font-serif italic">Work Like Humans</span>
           </motion.h1>
           
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto"
+            className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed"
           >
-            Delegate tasks to specialized AI assistants via voice or text.
+            Delegate tasks to specialized AI assistants via voice or text. <br className="hidden md:block" />
             They'll handle your business operations autonomously.
           </motion.p>
           
@@ -105,15 +105,19 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <GlassButton asChild>
-              <Link href="/signup" className="inline-flex items-center gap-2">
-                <span>Start Free Trial</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </GlassButton>
-            <GlassButton asChild>
-              <Link href="#demo">Watch Demo</Link>
-            </GlassButton>
+            <Link 
+              href="/signup" 
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base border-2 border-foreground rounded-full hover:bg-foreground hover:text-background transition-all duration-300 font-medium"
+            >
+              <span>Start Free Trial</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link 
+              href="#demo"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base border border-foreground/30 rounded-full hover:border-foreground/60 hover:bg-foreground/5 transition-all duration-300"
+            >
+              Watch Demo
+            </Link>
           </motion.div>
         </div>
         

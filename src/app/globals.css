@@ -137,6 +137,15 @@
   .fade-up {
     animation: fade-up 0.5s ease-out;
   }
+  /* Subtle grid background (low-contrast lines) */
+  .grid-bg {
+    background-color: hsl(var(--background));
+    background-image:
+      linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+    background-size: 48px 48px, 48px 48px;
+    background-position: center;
+  }
 }
 
 /* Liquid glass + button styles */
@@ -154,7 +163,8 @@
 
   /* Card geometry */
   .card-elevated {
-    @apply rounded-lg border bg-card shadow-sm hover:shadow-md transition;
+    @apply rounded-lg border shadow-sm hover:shadow-md transition;
+    background-color: hsl(var(--card));
   }
 
   /* Glass button effect */

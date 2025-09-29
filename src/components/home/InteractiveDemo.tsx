@@ -17,6 +17,8 @@ import {
   Bot,
   User
 } from 'lucide-react'
+import { toast } from 'sonner'
+import { ensureUserBusiness } from '@/lib/auth-helpers'
 
 interface Message {
   id: string
@@ -101,6 +103,7 @@ export default function InteractiveDemo() {
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [suggestedTask, setSuggestedTask] = useState(0)
+  const [creatingTask, setCreatingTask] = useState(false)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -145,6 +148,41 @@ export default function InteractiveDemo() {
       setIsTyping(false)
       setSuggestedTask((prev) => (prev + 1) % selectedDept.sampleTasks.length)
     }, 2000)
+  }
+
+  const createTaskFromLast = async () => {
+    try {
+      const lastUser = [...messages].reverse().find(m => m.role === 'user')
+      if (!lastUser) {
+        toast.error('No user message to convert')
+        return
+      }
+      setCreatingTask(true)
+      const businessId = await ensureUserBusiness()
+      const title = lastUser.content.slice(0, 80)
+      const description = `From demo · ${selectedDept.name}: ${lastUser.content}`
+      const res = await fetch('/api/backend/v1/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          description,
+          priority: 'medium',
+          department: selectedDept.id === 'project' ? 'project_management' : selectedDept.id,
+          businessId,
+        })
+      })
+      if (!res.ok) {
+        if (res.status === 401) throw new Error('Sign in to save tasks')
+        const msg = (await res.json())?.error || 'Failed to create task'
+        throw new Error(msg)
+      }
+      toast.success('Task saved to your Marketing space')
+    } catch (e: any) {
+      toast.error(e?.message || 'Could not save task')
+    } finally {
+      setCreatingTask(false)
+    }
   }
 
   return (
@@ -348,21 +386,29 @@ export default function InteractiveDemo() {
                   )}
                 </motion.button>
               </form>
-              
               {messages.length > 0 && (
-                <div className="mt-3 flex items-center justify-between">
+                <div className="mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <p className="text-xs text-muted-foreground">
                     This is a demo. Real assistants provide deeper insights.
                   </p>
-                  <button
-                    onClick={() => {
-                      setMessages([])
-                      setSuggestedTask(0)
-                    }}
-                    className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Clear chat
-                  </button>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={createTaskFromLast}
+                      disabled={creatingTask || !messages.some(m => m.role === 'user')}
+                      className="text-xs px-3 py-1.5 rounded-md border bg-background hover:bg-muted transition-colors disabled:opacity-50"
+                    >
+                      {creatingTask ? 'Saving…' : 'Save last as task'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMessages([])
+                        setSuggestedTask(0)
+                      }}
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      Clear chat
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

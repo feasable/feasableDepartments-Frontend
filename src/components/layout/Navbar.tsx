@@ -6,10 +6,12 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Menu, X, Zap } from 'lucide-react'
 import { GlassButton } from '@/components/ui/glass-button'
+import { createClient } from '@/lib/supabase/client'
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenu, setMobileMenu] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
 
   useEffect(() => {
     const handle = () => {
@@ -22,6 +24,19 @@ export function Navbar() {
     return () => {
       window.removeEventListener('scroll', handle)
       window.removeEventListener('resize', handle)
+    }
+  }, [])
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getSession().then(({ data }) => {
+      setUserEmail(data.session?.user?.email ?? null)
+    })
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserEmail(session?.user?.email ?? null)
+    })
+    return () => {
+      sub.subscription.unsubscribe()
     }
   }, [])
 
@@ -46,7 +61,7 @@ export function Navbar() {
                 className="group-hover:scale-110 transition-transform"
               />
               <span className="text-xl hidden sm:inline-block">
-                <span className="font-light">feasable</span><span className="font-bold">Spaces</span>
+                <span className="font-serif">feasable</span><span className="font-sans"><b>Spaces</b></span>
               </span>
             </Link>
 
@@ -68,12 +83,26 @@ export function Navbar() {
 
             {/* CTA Buttons */}
             <div className="hidden md:flex items-center gap-3">
-              <GlassButton asChild size="sm">
-                <Link href="/login" className="text-sm">Sign In</Link>
-              </GlassButton>
-              <GlassButton asChild size="sm">
-                <Link href="/signup" className="text-sm">Get Started</Link>
-              </GlassButton>
+              {userEmail ? (
+                <>
+                  <span className="text-xs text-muted-foreground hidden lg:inline-block">{userEmail}</span>
+                  <Link href="/dashboard" className="px-4 py-2 text-sm border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors">
+                    Dashboard
+                  </Link>
+                  <button onClick={async () => { await createClient().auth.signOut(); window.location.href = '/' }} className="px-4 py-2 text-sm border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors">
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="px-4 py-2 text-sm border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors">
+                    Sign In
+                  </Link>
+                  <Link href="/signup" className="px-4 py-2 text-sm border border-foreground rounded-full hover:bg-foreground hover:text-background transition-colors">
+                    Get Started
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -124,24 +153,38 @@ export function Navbar() {
             Contact
           </Link>
           <div className="pt-6 space-y-4 border-t">
-            <GlassButton asChild className="block">
-              <Link
-                href="/login"
-                onClick={() => setMobileMenu(false)}
-                className="block text-center"
-              >
-                Sign In
-              </Link>
-            </GlassButton>
-            <GlassButton asChild className="block">
-              <Link
-                href="/signup"
-                onClick={() => setMobileMenu(false)}
-                className="block text-center"
-              >
-                Get Started
-              </Link>
-            </GlassButton>
+            {userEmail ? (
+              <>
+                <div className="text-sm text-muted-foreground">{userEmail}</div>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenu(false)}
+                  className="block text-center px-4 py-3 border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors"
+                >
+                  Dashboard
+                </Link>
+                <button onClick={async () => { await createClient().auth.signOut(); window.location.href = '/' }} className="w-full px-4 py-3 border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors">
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenu(false)}
+                  className="block text-center px-4 py-3 border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  onClick={() => setMobileMenu(false)}
+                  className="block text-center px-4 py-3 border border-foreground rounded-full hover:bg-foreground hover:text-background transition-colors"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </motion.div>

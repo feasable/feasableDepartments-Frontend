@@ -7,6 +7,15 @@ export async function backend<T = any>(path: string, init?: RequestInit): Promis
     },
   })
   if (!res.ok) {
+    if (typeof window !== 'undefined' && res.status === 401) {
+      // Lazy import to avoid server-side bundling
+      const { toast } = await import('sonner')
+      toast.error('Please sign in to continue')
+      setTimeout(() => {
+        window.location.href = '/login'
+      }, 800)
+      throw new Error('Unauthorized')
+    }
     let msg = await res.text().catch(() => '')
     try {
       const j = JSON.parse(msg)

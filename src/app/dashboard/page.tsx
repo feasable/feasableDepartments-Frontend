@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { backend } from '@/lib/api'
+import { getBusinessId } from '@/lib/tenant'
+import { ensureUserBusiness } from '@/lib/auth-helpers'
 import VoicePanel from '@/components/VoicePanel'
 import { toast } from 'sonner'
 
@@ -22,6 +25,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState<any>(null)
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
+  const [businessId, setBusinessId] = useState<string | null>(null)
   const [stats, setStats] = useState({
     total: 0,
     completed: 0,
@@ -31,7 +35,6 @@ export default function DashboardPage() {
 
   useEffect(() => {
     checkAuth()
-    fetchTasks()
   }, [])
 
   const checkAuth = async () => {
@@ -44,23 +47,28 @@ export default function DashboardPage() {
     }
     
     setUser(session.user)
+    // Ensure business context
+    let id = getBusinessId()
+    if (!id) {
+      try {
+        id = await ensureUserBusiness()
+      } catch {
+        router.push('/login')
+        return
+      }
+    }
+    setBusinessId(id)
+    fetchTasks(id)
   }
 
-  const fetchTasks = async () => {
+  const fetchTasks = async (id: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/tasks`, {
-        headers: {
-          'Authorization': `Bearer ${(await createClient().auth.getSession()).data.session?.access_token}`
-        }
-      })
-      
-      if (response.ok) {
-        const data = await response.json()
-        setTasks(data.tasks || [])
-        updateStats(data.tasks || [])
-      }
+      const data = await backend<{ tasks: Task[] }>(`/v1/tasks?businessId=${id}&limit=20`)
+      setTasks(data.tasks || [])
+      updateStats(data.tasks || [])
     } catch (error) {
       console.error('Failed to fetch tasks:', error)
+      toast.error('Failed to load tasks')
     } finally {
       setLoading(false)
     }
