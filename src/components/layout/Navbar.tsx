@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Menu, X, Zap } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { GlassButton } from '@/components/ui/glass-button'
 import { createClient } from '@/lib/supabase/client'
 
@@ -43,62 +43,63 @@ export function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-background/80 backdrop-blur-md border-b border-border"
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-background/60 backdrop-blur-xl border-b border-border/30"
       >
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <Image
-                src="/images/fovvydotted.png"
-                alt="feasableSpaces"
-                width={48}
-                height={48}
-                className="group-hover:scale-110 transition-transform"
-              />
-              <span className="text-2xl">
-                <span className="font-serif">feasable</span><span className="font-sans">Spaces</span>
-              </span>
-            </Link>
+            {/* Logo in Glass Bubble */}
+            <GlassButton asChild size="default" className="glass-button-wrap">
+              <Link href="/" className="flex items-center gap-3 group">
+                <Image
+                  src="/images/fovvydotted.png"
+                  alt="feasableSpaces"
+                  width={48}
+                  height={48}
+                  className="group-hover:scale-110 transition-transform"
+                />
+                <span className="text-xl">
+                  <span className="font-serif">feasable</span><span className="font-sans font-semibold">Spaces</span>
+                </span>
+              </Link>
+            </GlassButton>
 
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center gap-8">
-              <Link href="/departments" className="hover:text-primary transition-colors">
-                Departments
-              </Link>
-              <Link href="/pricing" className="hover:text-primary transition-colors">
-                Pricing
-              </Link>
-              <Link href="/about" className="hover:text-primary transition-colors">
-                About
-              </Link>
-              <Link href="/contact" className="hover:text-primary transition-colors">
-                Contact
-              </Link>
+            {/* Desktop Menu - Each in Glass Bubble */}
+            <div className="hidden md:flex items-center gap-3">
+              <GlassButton asChild size="sm">
+                <Link href="/departments">Departments</Link>
+              </GlassButton>
+              <GlassButton asChild size="sm">
+                <Link href="/pricing">Pricing</Link>
+              </GlassButton>
+              <GlassButton asChild size="sm">
+                <Link href="/about">About</Link>
+              </GlassButton>
+              <GlassButton asChild size="sm">
+                <Link href="/contact">Contact</Link>
+              </GlassButton>
             </div>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons in Glass */}
             <div className="hidden md:flex items-center gap-3">
               {userEmail ? (
                 <>
                   <span className="text-xs text-muted-foreground hidden lg:inline-block">{userEmail}</span>
-                  <Link href="/dashboard" className="px-4 py-2 text-sm border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors">
-                    Dashboard
-                  </Link>
-                  <button onClick={async () => { await createClient().auth.signOut(); window.location.href = '/' }} className="px-4 py-2 text-sm border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors">
+                  <GlassButton asChild size="sm">
+                    <Link href="/dashboard">Dashboard</Link>
+                  </GlassButton>
+                  <GlassButton size="sm" onClick={async () => { await createClient().auth.signOut(); window.location.href = '/' }}>
                     Sign Out
-                  </button>
+                  </GlassButton>
                 </>
               ) : (
                 <>
-                  <Link href="/login" className="px-4 py-2 text-sm border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors">
-                    Sign In
-                  </Link>
-                  <Link href="/signup" className="px-4 py-2 text-sm border border-foreground rounded-full hover:bg-foreground hover:text-background transition-colors">
-                    Get Started
-                  </Link>
+                  <GlassButton asChild size="sm">
+                    <Link href="/login">Sign In</Link>
+                  </GlassButton>
+                  <GlassButton asChild size="sm">
+                    <Link href="/signup">Get Started</Link>
+                  </GlassButton>
                 </>
               )}
             </div>
@@ -121,66 +122,52 @@ export function Navbar() {
         transition={{ type: 'spring', damping: 20 }}
         className="fixed top-0 right-0 w-80 h-full bg-background/95 backdrop-blur-xl z-40 md:hidden"
       >
-        <div className="pt-24 px-6 space-y-6">
-          <Link
-            href="/departments"
-            onClick={() => setMobileMenu(false)}
-            className="block text-lg hover:text-primary transition-colors"
-          >
-            Departments
-          </Link>
-          <Link
-            href="/pricing"
-            onClick={() => setMobileMenu(false)}
-            className="block text-lg hover:text-primary transition-colors"
-          >
-            Pricing
-          </Link>
-          <Link
-            href="/about"
-            onClick={() => setMobileMenu(false)}
-            className="block text-lg hover:text-primary transition-colors"
-          >
-            About
-          </Link>
-          <Link
-            href="/contact"
-            onClick={() => setMobileMenu(false)}
-            className="block text-lg hover:text-primary transition-colors"
-          >
-            Contact
-          </Link>
-          <div className="pt-6 space-y-4 border-t">
+        <div className="pt-24 px-6 space-y-4">
+          <GlassButton asChild size="default" className="w-full">
+            <Link href="/departments" onClick={() => setMobileMenu(false)}>
+              Departments
+            </Link>
+          </GlassButton>
+          <GlassButton asChild size="default" className="w-full">
+            <Link href="/pricing" onClick={() => setMobileMenu(false)}>
+              Pricing
+            </Link>
+          </GlassButton>
+          <GlassButton asChild size="default" className="w-full">
+            <Link href="/about" onClick={() => setMobileMenu(false)}>
+              About
+            </Link>
+          </GlassButton>
+          <GlassButton asChild size="default" className="w-full">
+            <Link href="/contact" onClick={() => setMobileMenu(false)}>
+              Contact
+            </Link>
+          </GlassButton>
+          <div className="pt-6 space-y-4 border-t border-border/30">
             {userEmail ? (
               <>
-                <div className="text-sm text-muted-foreground">{userEmail}</div>
-                <Link
-                  href="/dashboard"
-                  onClick={() => setMobileMenu(false)}
-                  className="block text-center px-4 py-3 border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors"
-                >
-                  Dashboard
-                </Link>
-                <button onClick={async () => { await createClient().auth.signOut(); window.location.href = '/' }} className="w-full px-4 py-3 border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors">
+                <div className="text-sm text-muted-foreground text-center">{userEmail}</div>
+                <GlassButton asChild size="default" className="w-full">
+                  <Link href="/dashboard" onClick={() => setMobileMenu(false)}>
+                    Dashboard
+                  </Link>
+                </GlassButton>
+                <GlassButton size="default" className="w-full" onClick={async () => { await createClient().auth.signOut(); window.location.href = '/' }}>
                   Sign Out
-                </button>
+                </GlassButton>
               </>
             ) : (
               <>
-                <Link
-                  href="/login"
-                  onClick={() => setMobileMenu(false)}
-                  className="block text-center px-4 py-3 border border-foreground/20 rounded-full hover:bg-foreground/5 transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/signup"
-                  onClick={() => setMobileMenu(false)}
-                  className="block text-center px-4 py-3 border border-foreground rounded-full hover:bg-foreground hover:text-background transition-colors"
-                >
-                  Get Started
-                </Link>
+                <GlassButton asChild size="default" className="w-full">
+                  <Link href="/login" onClick={() => setMobileMenu(false)}>
+                    Sign In
+                  </Link>
+                </GlassButton>
+                <GlassButton asChild size="default" className="w-full">
+                  <Link href="/signup" onClick={() => setMobileMenu(false)}>
+                    Get Started
+                  </Link>
+                </GlassButton>
               </>
             )}
           </div>

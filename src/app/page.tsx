@@ -178,61 +178,105 @@ export default function Home() {
         <FuturisticDemo />
       </div>
 
-      {/* Quick Actions Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
+      {/* Why Work with feasableSpaces Section */}
+      <section className="relative py-32 px-6 overflow-hidden">
+        {/* Background with Image Slider */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background z-10" />
+        </div>
+        
+        <div className="relative z-20 max-w-6xl mx-auto">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Choose feasableSpaces</h2>
-            <p className="text-xl text-muted-foreground">Everything you need to scale your business</p>
+            <h2 className="text-4xl md:text-6xl font-bold mb-6">
+              Why Work with <span className="font-serif italic">feasableSpaces</span>
+            </h2>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
+              Transform your business with AI-powered departments that work 24/7
+            </p>
           </motion.div>
           
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8">
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center"
+              className="p-8 rounded-2xl bg-card/50 backdrop-blur-sm border hover:shadow-xl transition-all"
             >
-              <div className="w-12 h-12 mx-auto mb-3 rounded-md border flex items-center justify-center">
-                <Zap className="w-6 h-6" />
+              <div className="w-14 h-14 mb-6 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Zap className="w-7 h-7 text-primary" />
               </div>
-              <h3 className="font-semibold mb-2">Instant Setup</h3>
-              <p className="text-sm text-muted-foreground">No complex configuration needed</p>
+              <h3 className="text-2xl font-bold mb-4">Lightning Fast Setup</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Get started in under 2 minutes. No technical knowledge required. Your AI workforce is ready to work immediately.
+              </p>
             </motion.div>
             
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-center"
+              className="p-8 rounded-2xl bg-card/50 backdrop-blur-sm border hover:shadow-xl transition-all"
             >
-              <div className="w-12 h-12 mx-auto mb-3 rounded-md border flex items-center justify-center">
-                <MessageSquare className="w-6 h-6" />
+              <div className="w-14 h-14 mb-6 rounded-xl bg-primary/10 flex items-center justify-center">
+                <MessageSquare className="w-7 h-7 text-primary" />
               </div>
-              <h3 className="font-semibold mb-2">Voice or Text</h3>
-              <p className="text-sm text-muted-foreground">Communicate naturally with your AI team</p>
+              <h3 className="text-2xl font-bold mb-4">Natural Communication</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Talk to your AI team via voice or text, just like human colleagues. No complex commands or interfaces.
+              </p>
             </motion.div>
             
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-center"
+              className="p-8 rounded-2xl bg-card/50 backdrop-blur-sm border hover:shadow-xl transition-all"
             >
-              <div className="w-12 h-12 mx-auto mb-3 rounded-md border flex items-center justify-center">
-                <Shield className="w-6 h-6" />
+              <div className="w-14 h-14 mb-6 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Shield className="w-7 h-7 text-primary" />
               </div>
-              <h3 className="font-semibold mb-2">Enterprise Security</h3>
-              <p className="text-sm text-muted-foreground">Your data is encrypted and secure</p>
+              <h3 className="text-2xl font-bold mb-4">Enterprise-Grade Security</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Bank-level encryption, SOC 2 compliant, and GDPR ready. Your data stays private and secure, always.
+              </p>
             </motion.div>
           </div>
+
+          {/* Additional Benefits */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="mt-16 grid md:grid-cols-2 gap-6 max-w-4xl mx-auto"
+          >
+            <div className="flex items-start gap-4 p-6 rounded-xl bg-card/30 backdrop-blur-sm border">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <Users className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Scales With Your Team</h4>
+                <p className="text-sm text-muted-foreground">From solo founders to enterprise teams, feasableSpaces grows with you</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-4 p-6 rounded-xl bg-card/30 backdrop-blur-sm border">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <BarChart3 className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Real-Time Analytics</h4>
+                <p className="text-sm text-muted-foreground">Track performance, measure ROI, and optimize your AI workforce in real-time</p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 

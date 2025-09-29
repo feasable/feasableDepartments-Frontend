@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Crimson_Pro } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'sonner'
 import { Navbar } from '@/components/layout/Navbar'
@@ -12,8 +12,8 @@ const inter = Inter({
   display: 'swap',
 })
 
-const playfair = Playfair_Display({ 
-  weight: ['400', '700'],
+const crimsonPro = Crimson_Pro({ 
+  weight: ['400', '600', '700'],
   subsets: ['latin'],
   variable: '--font-serif',
   display: 'swap',
@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${inter.variable} ${crimsonPro.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground flex flex-col min-h-screen">
         <ScrollToTop />
         <Navbar />

@@ -25,8 +25,6 @@ interface Department {
   status: 'active' | 'beta' | 'coming_soon'
   href: string
   gradient: string
-  demoPrompt: string
-  demoResponse: string
 }
 
 const departments: Department[] = [
