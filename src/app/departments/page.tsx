@@ -127,9 +127,9 @@ export default function DepartmentsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-6xl mx-auto text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
-            <Sparkles className="w-4 h-4 text-yellow-500" />
-            <span className="text-sm font-medium">Choose your AI workforce</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border bg-background/60 mb-6">
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="text-xs font-medium tracking-tight">Choose your AI workforce</span>
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
@@ -154,30 +154,22 @@ export default function DepartmentsPage() {
                 transition={{ delay: i * 0.1 }}
                 className="group relative"
               >
-                <div className={`
-                  h-full p-6 rounded-2xl glass-card transition-all duration-300
-                  ${dept.status === 'active' ? 'hover:scale-105 cursor-pointer' : 'opacity-75'}
+                <div className={`h-full p-6 rounded-xl border bg-card transition-all duration-200
+                  ${dept.status === 'active' ? 'hover:shadow-md cursor-pointer' : 'opacity-80'}
                 `}>
                   {/* Status Badge */}
                   {dept.status !== 'active' && (
                     <div className="absolute -top-3 right-4">
-                      <span className={`
-                        px-3 py-1 rounded-full text-xs font-medium
-                        ${dept.status === 'beta' 
-                          ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' 
-                          : 'bg-gray-500/10 text-gray-500 border border-gray-500/20'}
-                      `}>
+                      <span className={`px-2 py-0.5 rounded-md text-xs font-medium border
+                        ${dept.status === 'beta' ? '' : ''}
+                     `}>
                         {dept.status === 'beta' ? 'BETA' : 'COMING SOON'}
                       </span>
                     </div>
                   )}
 
                   {/* Icon */}
-                  <div className={`
-                    w-14 h-14 rounded-xl bg-gradient-to-br ${dept.gradient} 
-                    flex items-center justify-center text-white mb-4
-                    group-hover:scale-110 transition-transform duration-300
-                  `}>
+                  <div className="w-14 h-14 rounded-md bg-secondary border flex items-center justify-center text-foreground/80 mb-4">
                     {dept.icon}
                   </div>
 
@@ -191,7 +183,7 @@ export default function DepartmentsPage() {
                   <ul className="space-y-2 mb-6">
                     {dept.features.slice(0, 3).map((feature, idx) => (
                       <li key={idx} className="flex items-center gap-2 text-sm">
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                        <div className="w-1.5 h-1.5 rounded-sm bg-primary" />
                         <span>{feature}</span>
                       </li>
                     ))}

@@ -18,6 +18,7 @@ import {
   Apple
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { ensureUserBusiness } from '@/lib/auth-helpers'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
@@ -74,7 +75,7 @@ export function AuthPage({ mode = 'login', onModeChange }: AuthPageProps) {
 
     try {
       if (isSignup) {
-        const { error } = await supabase.auth.signUp({
+        const { error: signUpError } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
           options: {
@@ -85,15 +86,28 @@ export function AuthPage({ mode = 'login', onModeChange }: AuthPageProps) {
             emailRedirectTo: `${window.location.origin}/departments/marketing`,
           },
         })
-        if (error) throw error
+        if (signUpError) throw signUpError
         toast.success('Check your email to confirm your account!')
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        
+        const { error: signInError } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
         })
-        if (error) throw error
-        toast.success('Welcome back!')
+        if (signInError) throw signInError
+        
+        // Success - ensure user has a business, then redirect
+        await ensureUserBusiness()
+        router.push('/departments/marketing')
+      } else {
+        // Login flow
+        const { error: loginError } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        })
+        if (loginError) throw loginError
+        
+        // Success - ensure user has a business, then redirect
+        await ensureUserBusiness()
         router.push('/departments/marketing')
       }
     } catch (error: any) {

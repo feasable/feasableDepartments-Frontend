@@ -3,7 +3,7 @@
 import React from 'react'
 import type { ComponentProps, ReactNode } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { Building2, Facebook, Instagram, Youtube, Linkedin, Twitter, Github, Mail } from 'lucide-react'
+import { Facebook, Instagram, Youtube, Linkedin, Twitter, Github, Mail } from 'lucide-react'
 import Image from 'next/image'
 
 interface FooterLink {
@@ -73,7 +73,7 @@ export function Footer() {
           {/* Brand Section */}
           <AnimatedContainer className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-2">
-              <Building2 className="w-8 h-8 text-primary" />
+              <Image src="/images/fovvydotted.png" alt="feasableSpaces" width={28} height={28} className="opacity-90" />
               <span className="text-xl">
                 <span className="font-light">feasable</span><span className="font-bold">Spaces</span>
               </span>

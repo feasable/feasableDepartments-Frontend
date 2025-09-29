@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter, Space_Mono } from 'next/font/google'
+import { Plus_Jakarta_Sans, Space_Mono } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'sonner'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/ui/footer-section'
 import ScrollToTop from '@/components/ScrollToTop'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
+const inter = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-sans' })
 const spaceMono = Space_Mono({ 
   weight: ['400', '700'],
   subsets: ['latin'],

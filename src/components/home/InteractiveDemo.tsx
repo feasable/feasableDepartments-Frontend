@@ -156,9 +156,9 @@ export default function InteractiveDemo() {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
-          <Sparkles className="w-4 h-4 text-yellow-500" />
-          <span className="text-sm font-medium">Try it now - No signup required</span>
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border bg-background/60 mb-6">
+          <Sparkles className="w-4 h-4 text-primary" />
+          <span className="text-xs font-medium tracking-tight">Try it now - No signup required</span>
         </div>
         <h2 className="text-4xl md:text-5xl font-bold mb-4">
           Meet the Team!
@@ -176,7 +176,7 @@ export default function InteractiveDemo() {
         viewport={{ once: true }}
         className="max-w-5xl mx-auto"
       >
-        <div className="glass-card rounded-3xl overflow-hidden">
+        <div className="border rounded-xl bg-card shadow-sm overflow-hidden">
           {/* Department Selector */}
           <div className="border-b border-border/50 p-4">
             <div className="flex gap-2 overflow-x-auto pb-2">
@@ -190,10 +190,10 @@ export default function InteractiveDemo() {
                   }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md border transition-colors whitespace-nowrap ${
                     selectedDept.id === dept.id
-                      ? `bg-gradient-to-r ${dept.gradient} text-white`
-                      : 'bg-secondary hover:bg-secondary/80'
+                      ? 'bg-foreground text-background border-foreground'
+                      : 'bg-background hover:bg-muted'
                   }`}
                 >
                   {dept.icon}
@@ -216,7 +216,7 @@ export default function InteractiveDemo() {
                   animate={{ opacity: 1 }}
                   className="text-center py-12"
                 >
-                  <Bot className={`w-16 h-16 mx-auto mb-4 text-muted-foreground`} />
+                  <Bot className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
                   <h3 className="text-lg font-semibold mb-2">
                     {selectedDept.name} Assistant Ready
                   </h3>
@@ -234,7 +234,7 @@ export default function InteractiveDemo() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.1 }}
                         onClick={() => handleSendMessage(task)}
-                        className="block w-full text-left px-4 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-sm"
+                        className="block w-full text-left px-4 py-2 rounded-md border bg-background hover:bg-muted transition-colors text-sm"
                       >
                         "{task}"
                       </motion.button>
@@ -255,16 +255,16 @@ export default function InteractiveDemo() {
                         }`}
                       >
                         {message.role === 'assistant' && (
-                          <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${selectedDept.gradient} flex items-center justify-center flex-shrink-0`}>
-                            <Bot className="w-4 h-4 text-white" />
+                          <div className="w-8 h-8 rounded-md bg-secondary border flex items-center justify-center flex-shrink-0">
+                            <Bot className="w-4 h-4" />
                           </div>
                         )}
                         
                         <div className={`max-w-[70%] ${
                           message.role === 'user'
-                            ? 'bg-primary text-primary-foreground'
+                            ? 'bg-foreground text-background'
                             : 'bg-secondary'
-                        } rounded-2xl px-4 py-3`}>
+                        } rounded-md px-4 py-3`}>
                           {message.department && (
                             <div className="text-xs opacity-70 mb-1">
                               {message.department} Assistant
@@ -274,7 +274,7 @@ export default function InteractiveDemo() {
                         </div>
                         
                         {message.role === 'user' && (
-                          <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
+                          <div className="w-8 h-8 rounded-md bg-secondary border flex items-center justify-center flex-shrink-0">
                             <User className="w-4 h-4" />
                           </div>
                         )}
@@ -288,10 +288,10 @@ export default function InteractiveDemo() {
                       animate={{ opacity: 1 }}
                       className="flex gap-3"
                     >
-                      <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${selectedDept.gradient} flex items-center justify-center`}>
-                        <Bot className="w-4 h-4 text-white" />
+                      <div className="w-8 h-8 rounded-md bg-secondary border flex items-center justify-center">
+                        <Bot className="w-4 h-4" />
                       </div>
-                      <div className="bg-secondary rounded-2xl px-4 py-3">
+                      <div className="bg-secondary rounded-md px-4 py-3">
                         <div className="flex gap-1">
                           <motion.div
                             animate={{ y: [0, -5, 0] }}
@@ -331,7 +331,7 @@ export default function InteractiveDemo() {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder={`Ask ${selectedDept.name} assistant...`}
-                  className="flex-1 px-4 py-3 rounded-full bg-secondary/50 focus:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  className="flex-1 px-4 py-3 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
                   disabled={isTyping}
                 />
                 <motion.button
@@ -339,7 +339,7 @@ export default function InteractiveDemo() {
                   whileTap={{ scale: 0.95 }}
                   type="submit"
                   disabled={isTyping || !inputValue.trim()}
-                  className={`p-3 rounded-full bg-gradient-to-r ${selectedDept.gradient} text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
+                  className="p-3 rounded-md bg-foreground text-background disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   {isTyping ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

@@ -5,15 +5,24 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Menu, X, Zap } from 'lucide-react'
+import { GlassButton } from '@/components/ui/glass-button'
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenu, setMobileMenu] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const handle = () => {
+      const threshold = Math.max(20, Math.floor(window.innerHeight * 0.6))
+      setScrolled(window.scrollY > threshold)
+    }
+    handle()
+    window.addEventListener('scroll', handle)
+    window.addEventListener('resize', handle)
+    return () => {
+      window.removeEventListener('scroll', handle)
+      window.removeEventListener('resize', handle)
+    }
   }, [])
 
   return (
@@ -22,7 +31,7 @@ export function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled ? 'glass py-3' : 'py-6'
+          scrolled ? 'liquid-glass liquid-outline shadow-[0_8px_30px_rgba(0,0,0,0.06)] py-3' : 'py-6'
         }`}
       >
         <div className="container mx-auto px-6">
@@ -58,16 +67,13 @@ export function Navbar() {
             </div>
 
             {/* CTA Buttons */}
-            <div className="hidden md:flex items-center gap-4">
-              <Link href="/login" className="hover:text-primary transition-colors">
-                Sign In
-              </Link>
-              <Link
-                href="/signup"
-                className="px-6 py-2 bg-primary text-primary-foreground rounded-full hover:shadow-lg hover:shadow-primary/25 transition-all"
-              >
-                Get Started
-              </Link>
+            <div className="hidden md:flex items-center gap-3">
+              <GlassButton asChild size="sm">
+                <Link href="/login" className="text-sm">Sign In</Link>
+              </GlassButton>
+              <GlassButton asChild size="sm">
+                <Link href="/signup" className="text-sm">Get Started</Link>
+              </GlassButton>
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -118,20 +124,24 @@ export function Navbar() {
             Contact
           </Link>
           <div className="pt-6 space-y-4 border-t">
-            <Link
-              href="/login"
-              onClick={() => setMobileMenu(false)}
-              className="block text-center py-3 border rounded-lg hover:bg-accent transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/signup"
-              onClick={() => setMobileMenu(false)}
-              className="block text-center py-3 bg-primary text-primary-foreground rounded-lg"
-            >
-              Get Started
-            </Link>
+            <GlassButton asChild className="block">
+              <Link
+                href="/login"
+                onClick={() => setMobileMenu(false)}
+                className="block text-center"
+              >
+                Sign In
+              </Link>
+            </GlassButton>
+            <GlassButton asChild className="block">
+              <Link
+                href="/signup"
+                onClick={() => setMobileMenu(false)}
+                className="block text-center"
+              >
+                Get Started
+              </Link>
+            </GlassButton>
           </div>
         </div>
       </motion.div>
