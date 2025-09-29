@@ -126,7 +126,7 @@ export function ContactPage() {
 
           <div className="relative z-10 space-y-6">
             <h2 className="text-center text-3xl font-bold md:text-4xl">
-              Find us online
+              Join our community
             </h2>
             <div className="flex flex-wrap items-center justify-center gap-4">
               {socialLinks.map((link) => (

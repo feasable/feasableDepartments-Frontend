@@ -44,11 +44,6 @@ export default function AboutPage() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-4xl mx-auto text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
-            <Building2 className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">About FeasableDepartments</span>
-          </div>
-          
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             Building the Future of
             <span className="text-gradient"> Work</span>

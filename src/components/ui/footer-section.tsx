@@ -75,7 +75,7 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <Image src="/images/fovvydotted.png" alt="feasableSpaces" width={28} height={28} className="opacity-90" />
               <span className="text-xl">
-                <span className="font-light">feasable</span><span className="font-bold">Spaces</span>
+              <span className="font-serif font-light">feasable</span><span className="font-serif font-bold">Spaces</span>
               </span>
             </div>
             <p className="text-muted-foreground text-sm max-w-sm">

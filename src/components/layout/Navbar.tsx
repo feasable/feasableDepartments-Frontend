@@ -48,26 +48,24 @@ export function Navbar() {
       >
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
-            {/* Logo in Glass Bubble */}
-            <GlassButton asChild size="default" className="glass-button-wrap">
-              <Link href="/" className="flex items-center gap-3 group">
-                <Image
-                  src="/images/fovvydotted.png"
-                  alt="feasableSpaces"
-                  width={48}
-                  height={48}
-                  className="group-hover:scale-110 transition-transform"
-                />
-                <span className="text-xl">
-                  <span className="font-serif">feasable</span><span className="font-sans font-semibold">Spaces</span>
-                </span>
-              </Link>
-            </GlassButton>
+            {/* Logo without Glass Effect */}
+            <Link href="/" className="flex items-center gap-3 group">
+              <Image
+                src="/images/fovvydotted.png"
+                alt="feasableSpaces"
+                width={48}
+                height={48}
+                className="group-hover:scale-110 transition-transform"
+              />
+              <span className="text-xl">
+                <span className="font-serif font-light">feasable</span><span className="font-serif font-bold">Spaces</span>
+              </span>
+            </Link>
 
             {/* Desktop Menu - Each in Glass Bubble */}
             <div className="hidden md:flex items-center gap-3">
               <GlassButton asChild size="sm">
-                <Link href="/departments">Departments</Link>
+                <Link href="/departments"><u>Spaces</u></Link>
               </GlassButton>
               <GlassButton asChild size="sm">
                 <Link href="/pricing">Pricing</Link>
@@ -104,13 +102,14 @@ export function Navbar() {
               )}
             </div>
 
-            {/* Mobile Menu Toggle */}
-            <button
+            {/* Mobile Menu Toggle with Glass */}
+            <GlassButton
+              size="icon"
               onClick={() => setMobileMenu(!mobileMenu)}
-              className="md:hidden p-2 hover:bg-accent rounded-lg transition-colors"
+              className="md:hidden"
             >
               {mobileMenu ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            </GlassButton>
           </div>
         </div>
       </motion.nav>

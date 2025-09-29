@@ -23,7 +23,10 @@ export const metadata: Metadata = {
   title: 'feasableSpaces',
   description: 'Delegate tasks to specialized AI departments that work like human experts',
   icons: {
-    icon: '/images/fovvydotted.png',
+    icon: [
+      { url: '/images/fovvydotted.png' },
+      { url: '/images/fovvydotted.png', sizes: '32x32', type: 'image/png' },
+    ],
   },
 }
 

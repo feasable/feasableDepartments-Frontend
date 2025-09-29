@@ -57,12 +57,16 @@ export default function SignupPage() {
     const supabase = createClient();
     const redirectUrl = typeof window !== 'undefined' 
       ? `${window.location.origin}/auth/callback`
-      : '/auth/callback';
+      : 'https://spaces.feasable.org/auth/callback';
     
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: redirectUrl,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
       },
     });
   };

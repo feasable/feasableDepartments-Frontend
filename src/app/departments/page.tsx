@@ -123,90 +123,103 @@ const departments: Department[] = [
 export default function DepartmentsPage() {
   return (
     <div className="min-h-screen py-20">
-      {/* Hero Section */}
-      <section className="px-6 pt-16 pb-12">
+      {/* Hero Section - Redesigned */}
+      <section className="relative px-6 pt-24 pb-20 overflow-hidden">
+        {/* Background Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-background to-background" />
+        
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-6xl mx-auto text-center"
+          className="relative z-10 max-w-6xl mx-auto text-center"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border bg-background/60 mb-6">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-xs font-medium tracking-tight">Choose your AI workforce</span>
-          </div>
-          
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            AI Departments
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
+            AI <span className="font-serif italic">Spaces</span>
           </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Each department is powered by specialized AI assistants trained to handle 
-            specific business functions. Start with one or deploy your entire AI workforce.
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            Each Space is a specialized AI assistant trained to handle specific business functions. 
+            <br className="hidden md:block" />
+            Deploy one or build your entire AI workforce—they work autonomously 24/7.
           </p>
         </motion.div>
       </section>
 
-      {/* Departments Grid */}
+      {/* Spaces Grid - Redesigned */}
       <section className="px-6 pb-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {departments.map((dept, i) => (
               <motion.div
                 key={dept.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: i * 0.1, type: "spring", stiffness: 100 }}
+                whileHover={{ y: -10, transition: { duration: 0.2 } }}
                 className="group relative"
               >
-                <div className={`h-full p-6 rounded-xl border bg-card transition-all duration-200
-                  ${dept.status === 'active' ? 'hover:shadow-md cursor-pointer' : 'opacity-80'}
+                {/* Card */}
+                <div className={`relative h-full p-8 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all duration-300 overflow-hidden
+                  ${dept.status !== 'active' ? 'opacity-70' : ''}
                 `}>
-                  {/* Status Badge */}
-                  {dept.status !== 'active' && (
-                    <div className="absolute -top-3 right-4">
-                      <span className={`px-2 py-0.5 rounded-md text-xs font-medium border
-                        ${dept.status === 'beta' ? '' : ''}
-                     `}>
-                        {dept.status === 'beta' ? 'BETA' : 'COMING SOON'}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Icon */}
-                  <div className="w-14 h-14 rounded-md bg-secondary border flex items-center justify-center text-foreground/80 mb-4">
-                    {dept.icon}
-                  </div>
-
+                  {/* Gradient Overlay on Hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
                   {/* Content */}
-                  <h3 className="text-xl font-bold mb-2">{dept.name}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {dept.description}
-                  </p>
+                  <div className="relative z-10">
+                    {/* Status Badge */}
+                    {dept.status !== 'active' && (
+                      <div className="absolute -top-4 -right-4">
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold
+                          ${dept.status === 'beta' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' : 'bg-muted-foreground/10 text-muted-foreground border border-muted-foreground/20'}
+                        `}>
+                          {dept.status === 'beta' ? 'BETA' : 'COMING SOON'}
+                        </span>
+                      </div>
+                    )}
 
-                  {/* Features */}
-                  <ul className="space-y-2 mb-6">
-                    {dept.features.slice(0, 3).map((feature, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-sm">
-                        <div className="w-1.5 h-1.5 rounded-sm bg-primary" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                    {/* Icon */}
+                    <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                      {dept.icon}
+                    </div>
 
-                  {/* CTA */}
-                  {dept.status === 'active' ? (
-                    <Link
-                      href={dept.href}
-                      className="inline-flex items-center gap-2 text-primary font-medium 
-                        group-hover:gap-3 transition-all"
-                    >
-                      Explore {dept.name}
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  ) : (
-                    <span className="text-muted-foreground text-sm">
-                      {dept.status === 'beta' ? 'Limited access' : 'Notify me'}
-                    </span>
-                  )}
+                    {/* Title */}
+                    <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
+                      {dept.name} <span className="font-serif font-light text-lg">Space</span>
+                    </h3>
+                    
+                    {/* Description */}
+                    <p className="text-muted-foreground leading-relaxed mb-6">
+                      {dept.description}
+                    </p>
+
+                    {/* Features */}
+                    <ul className="space-y-3 mb-8">
+                      {dept.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-center gap-3 text-sm">
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* CTA */}
+                    {dept.status === 'active' ? (
+                      <Link
+                        href={dept.href}
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      >
+                        <span>Launch Space</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                    ) : (
+                      <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                        {dept.status === 'beta' ? 'Request Access →' : 'Get Notified →'}
+                      </button>
+                    )}
+                  </div>
+                  
+                  {/* Decorative Element */}
+                  <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-300" />
                 </div>
               </motion.div>
             ))}
@@ -214,37 +227,43 @@ export default function DepartmentsPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="px-6 pb-20">
+      {/* CTA Section - Redesigned */}
+      <section className="relative px-6 pb-32 overflow-hidden">
+        {/* Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-background to-background" />
+        
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto"
+          className="relative z-10 max-w-5xl mx-auto text-center"
         >
-          <div className="glass-card rounded-3xl p-12 text-center">
-            <h2 className="text-3xl font-bold mb-4">
-              Ready to build your AI workforce?
-            </h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Start with our free plan and scale as you grow. No credit card required.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/signup"
-                className="px-8 py-3 bg-primary text-primary-foreground rounded-full 
-                  font-medium hover:shadow-lg hover:shadow-primary/25 transition-all"
-              >
-                Start Free Trial
-              </Link>
-              <Link
-                href="/pricing"
-                className="px-8 py-3 glass rounded-full font-medium 
-                  hover:bg-white/20 dark:hover:bg-white/10 transition-all"
-              >
-                View Pricing
-              </Link>
-            </div>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
+            <Zap className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium">Start Building Today</span>
+          </div>
+          
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Ready to Deploy Your <span className="font-serif italic">Spaces?</span>
+          </h2>
+          <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto">
+            Start with our free plan and scale as you grow. Each Space works autonomously—no credit card required.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center gap-2 px-10 py-5 text-lg bg-foreground text-background rounded-full font-semibold hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl"
+            >
+              Start Free Trial
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link
+              href="/pricing"
+              className="inline-flex items-center justify-center gap-2 px-10 py-5 text-lg border-2 border-foreground/20 rounded-full font-semibold hover:border-foreground/40 hover:bg-foreground/5 transition-all duration-300"
+            >
+              View Pricing
+            </Link>
           </div>
         </motion.div>
       </section>

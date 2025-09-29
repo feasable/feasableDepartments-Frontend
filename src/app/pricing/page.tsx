@@ -75,18 +75,13 @@ export default function PricingPage() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-4xl mx-auto text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8">
-            <Sparkles className="w-4 h-4 text-yellow-500" />
-            <span className="text-sm font-medium">Simple, transparent pricing</span>
-          </div>
-          
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Choose Your
-            <span className="text-gradient"> AI Team Size</span>
+            <span className="font-serif"> <i>AI Team Size</i></span>
           </h1>
           
           <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Scale your AI departments as you grow. Start free, upgrade anytime.
+            Scale your Spaces as you grow! Start free, upgrade anytime.
           </p>
         </motion.div>
       </section>
