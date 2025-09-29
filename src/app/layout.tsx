@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Instrument_Serif } from 'next/font/google'
+import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'sonner'
 import { Navbar } from '@/components/layout/Navbar'
@@ -12,16 +12,19 @@ const inter = Inter({
   display: 'swap',
 })
 
-const instrumentSerif = Instrument_Serif({ 
-  weight: '400',
+const playfair = Playfair_Display({ 
+  weight: ['400', '700'],
   subsets: ['latin'],
   variable: '--font-serif',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'feasableDepartments - AI-Powered Business Automation',
+  title: 'feasableSpaces',
   description: 'Delegate tasks to specialized AI departments that work like human experts',
+  icons: {
+    icon: '/images/fovvydotted.png',
+  },
 }
 
 export default function RootLayout({
@@ -30,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`}>
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground flex flex-col min-h-screen">
         <ScrollToTop />
         <Navbar />

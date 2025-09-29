@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { ArrowRight, Sparkles, Zap, Shield, Users, BarChart3, MessageSquare } from 'lucide-react'
 import VerticalBarsFixed from '@/components/ui/vertical-bars-fixed'
 import { Waves } from '@/components/ui/waves-background'
-import InteractiveDemo from '@/components/home/InteractiveDemo'
+import FuturisticDemo from '@/components/home/FuturisticDemo'
 import { GlassButton } from '@/components/ui/glass-button'
 
 export default function Home() {
@@ -69,16 +69,6 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-foreground/10 bg-background/50 backdrop-blur-sm mb-8"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span className="text-sm font-medium">AI-powered departments for modern teams</span>
-          </motion.div>
-          
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -185,7 +175,7 @@ export default function Home() {
 
       {/* Interactive Demo Section */}
       <div id="demo">
-        <InteractiveDemo />
+        <FuturisticDemo />
       </div>
 
       {/* Quick Actions Section */}

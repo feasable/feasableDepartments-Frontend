@@ -1,6 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { 
   Users, 
@@ -10,7 +11,9 @@ import {
   Shield,
   Cog,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Send,
+  Zap
 } from 'lucide-react'
 
 interface Department {
@@ -22,6 +25,8 @@ interface Department {
   status: 'active' | 'beta' | 'coming_soon'
   href: string
   gradient: string
+  demoPrompt: string
+  demoResponse: string
 }
 
 const departments: Department[] = [
