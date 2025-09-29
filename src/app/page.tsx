@@ -99,7 +99,7 @@ export default function Home() {
               href="/signup" 
               className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base border-2 border-foreground rounded-full hover:bg-foreground hover:text-background transition-all duration-300 font-medium"
             >
-              <span>Start Free Trial</span>
+              <span>Start Free</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link 
@@ -345,7 +345,7 @@ export default function Home() {
               href="/signup"
               className="inline-flex items-center justify-center gap-2 px-10 py-5 text-lg bg-foreground text-background rounded-full font-semibold hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl"
             >
-              Start Free Trial
+              Start Free
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link

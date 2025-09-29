@@ -136,7 +136,7 @@ export default function HomePage() {
                 href="/signup"
                 className="px-6 py-3 bg-primary text-primary-foreground rounded-md font-mono font-bold hover:bg-primary/90"
               >
-                Start Free Trial
+                Start Free
               </Link>
               <Link
                 href="/demo"

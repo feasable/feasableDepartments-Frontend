@@ -201,7 +201,7 @@ export default function FuturisticDemo() {
                 href="/signup"
                 className="inline-flex items-center justify-center px-8 py-3 border-2 border-foreground rounded-full hover:bg-foreground hover:text-background transition-all font-medium"
               >
-                Start Free Trial
+                Start Free
               </a>
               <a
                 href="/pricing"

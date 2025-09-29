@@ -17,8 +17,7 @@ import {
 import { Button, ButtonProps } from '@/components/ui/button'
 
 const APP_EMAIL = 'hello@feasable.org'
-const APP_PHONE = '+1 (555) 123-4567'
-const APP_PHONE_2 = '+1 (555) 987-6543'
+const APP_PHONE = '+264 81 483 7080'
 
 export function ContactPage() {
   const socialLinks = [
@@ -34,7 +33,7 @@ export function ContactPage() {
     },
     {
       icon: Linkedin,
-      href: 'https://linkedin.com/company/feasable',
+      href: 'https://www.linkedin.com/company/feasable-labs/?viewAsMember=true',
       label: 'LinkedIn',
     },
     {
@@ -79,37 +78,26 @@ export function ContactPage() {
           <Box
             icon={MapPin}
             title="Office"
-            description="Visit our headquarters in Silicon Valley."
+            description="Come Say Hi!"
           >
             <span className="font-mono text-base font-medium tracking-wide">
-              1234 Innovation Drive, Suite 100, Palo Alto, CA 94301, United States
+              18 Vision Tower, Nelson Mandela Avenue, Klein Windhoek, Windhoek, Namibia
             </span>
           </Box>
           <Box
             icon={Phone}
             title="Phone"
-            description="We're available Mon-Fri, 9am-6pm PST."
+            description="We're available Mon-Fri, 5pm-10pm CAT."
             className="border-b-0 md:border-r-0"
           >
-            <div>
-              <div className="flex items-center gap-x-2">
-                <a
-                  href={`tel:${APP_PHONE}`}
-                  className="block font-mono text-base font-medium tracking-wide hover:underline"
-                >
-                  {APP_PHONE}
-                </a>
-                <CopyButton className="size-6" test={APP_PHONE} />
-              </div>
-              <div className="flex items-center gap-x-2">
-                <a
-                  href={`tel:${APP_PHONE_2}`}
-                  className="block font-mono text-base font-medium tracking-wide hover:underline"
-                >
-                  {APP_PHONE_2}
-                </a>
-                <CopyButton className="size-6" test={APP_PHONE_2} />
-              </div>
+            <div className="flex items-center gap-x-2">
+              <a
+                href={`tel:${APP_PHONE}`}
+                className="block font-mono text-base font-medium tracking-wide hover:underline"
+              >
+                {APP_PHONE}
+              </a>
+              <CopyButton className="size-6" test={APP_PHONE} />
             </div>
           </Box>
         </div>

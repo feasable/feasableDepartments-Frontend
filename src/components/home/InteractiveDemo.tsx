@@ -432,7 +432,7 @@ export default function InteractiveDemo() {
               whileTap={{ scale: 0.95 }}
               className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium hover:shadow-lg hover:shadow-primary/25 transition-all"
             >
-              Start Free Trial
+              Start Free
             </motion.a>
             <motion.a
               href="/pricing"

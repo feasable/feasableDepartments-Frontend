@@ -35,7 +35,7 @@ const plans = [
       'Priority support',
       'Custom integrations'
     ],
-    cta: 'Start Free Trial',
+    cta: 'Start Free',
     href: '/signup',
     popular: true
   },

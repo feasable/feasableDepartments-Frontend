@@ -4,6 +4,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: ['supabase.co', 'localhost'],
+    unoptimized: true,
   },
   async rewrites() {
     return [
