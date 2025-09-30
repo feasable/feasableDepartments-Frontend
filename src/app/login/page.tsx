@@ -19,6 +19,18 @@ export default function LoginPage() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  // Check if user is already logged in
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.push('/dashboard');
+      }
+    };
+    checkAuth();
+  }, [router]);
+
   const images = [
     "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=60",
     "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&auto=format&fit=crop&q=60",
@@ -86,8 +98,8 @@ export default function LoginPage() {
       
       if (error) throw error;
       
-      await ensureUserBusiness();
-      router.push('/departments/marketing');
+      // Always redirect to dashboard - it will handle onboarding if needed
+      router.push('/dashboard');
     } catch (error: any) {
       toast.error(error.message || 'Login failed');
     } finally {

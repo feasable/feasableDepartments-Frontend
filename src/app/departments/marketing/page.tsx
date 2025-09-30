@@ -52,9 +52,13 @@ export default function MarketingDepartmentPage() {
       try {
         const id = await ensureUserBusiness()
         setBusinessId(id)
-      } catch (e) {
-        // Fallback: go to signup/login
-        router.push('/login')
+      } catch (e: any) {
+        // If no workspace, redirect to dashboard which will show onboarding
+        if (e.message === 'NO_WORKSPACE') {
+          router.push('/dashboard')
+        } else {
+          router.push('/login')
+        }
       }
     }
     tryEnsure()

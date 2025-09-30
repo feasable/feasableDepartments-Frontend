@@ -12,6 +12,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenu, setMobileMenu] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [userDisplayName, setUserDisplayName] = useState<string | null>(null)
 
   useEffect(() => {
     const handle = () => {
@@ -30,10 +31,32 @@ export function Navbar() {
   useEffect(() => {
     const supabase = createClient()
     supabase.auth.getSession().then(({ data }) => {
-      setUserEmail(data.session?.user?.email ?? null)
+      const user = data.session?.user
+      setUserEmail(user?.email ?? null)
+      if (user) {
+        const firstName = user.user_metadata?.first_name || user.user_metadata?.full_name?.split(' ')[0]
+        const lastName = user.user_metadata?.last_name || user.user_metadata?.full_name?.split(' ')[1]
+        if (firstName && lastName) {
+          setUserDisplayName(`${firstName} ${lastName.charAt(0)}.`)
+        } else {
+          setUserDisplayName(user.email ?? null)
+        }
+      }
     })
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUserEmail(session?.user?.email ?? null)
+      const user = session?.user
+      setUserEmail(user?.email ?? null)
+      if (user) {
+        const firstName = user.user_metadata?.first_name || user.user_metadata?.full_name?.split(' ')[0]
+        const lastName = user.user_metadata?.last_name || user.user_metadata?.full_name?.split(' ')[1]
+        if (firstName && lastName) {
+          setUserDisplayName(`${firstName} ${lastName.charAt(0)}.`)
+        } else {
+          setUserDisplayName(user.email ?? null)
+        }
+      } else {
+        setUserDisplayName(null)
+      }
     })
     return () => {
       sub.subscription.unsubscribe()
@@ -82,7 +105,7 @@ export function Navbar() {
             <div className="hidden md:flex items-center gap-3">
               {userEmail ? (
                 <>
-                  <span className="text-xs text-muted-foreground hidden lg:inline-block">{userEmail}</span>
+                  <span className="text-xs text-muted-foreground hidden lg:inline-block">{userDisplayName || userEmail}</span>
                   <GlassButton asChild size="sm">
                     <Link href="/dashboard">Dashboard</Link>
                   </GlassButton>
@@ -145,7 +168,7 @@ export function Navbar() {
           <div className="pt-6 space-y-4 border-t border-border/30">
             {userEmail ? (
               <>
-                <div className="text-sm text-muted-foreground text-center">{userEmail}</div>
+                <div className="text-sm text-muted-foreground text-center">{userDisplayName || userEmail}</div>
                 <GlassButton asChild size="default" className="w-full">
                   <Link href="/dashboard" onClick={() => setMobileMenu(false)}>
                     Dashboard

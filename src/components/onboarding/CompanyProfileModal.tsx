@@ -12,13 +12,15 @@ import { toast } from 'sonner'
 interface CompanyProfileModalProps {
   isOpen: boolean
   onClose: () => void
-  businessId: string
+  businessId?: string
 }
 
 export function CompanyProfileModal({ isOpen, onClose, businessId }: CompanyProfileModalProps) {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
+    firstName: '',
+    lastName: '',
     industry: '',
     companySize: '',
     website: '',
@@ -28,8 +30,8 @@ export function CompanyProfileModal({ isOpen, onClose, businessId }: CompanyProf
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!formData.name) {
-      toast.error('Company name is required')
+    if (!formData.name || !formData.firstName || !formData.lastName) {
+      toast.error('Company name, first name, and last name are required')
       return
     }
 
@@ -37,20 +39,59 @@ export function CompanyProfileModal({ isOpen, onClose, businessId }: CompanyProf
     const supabase = createClient()
 
     try {
-      const { error } = await supabase
-        .from('businesses')
-        .update({
-          name: formData.name,
-          industry: formData.industry || null,
-          company_size: formData.companySize || null,
-          website: formData.website || null,
-          description: formData.description || null,
+      // Get current session first
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      if (sessionError || !session?.user) {
+        throw new Error('Please log in to complete your profile')
+      }
+      const user = session.user
+
+      // Update user metadata with name
+      const { error: userError } = await supabase.auth.updateUser({
+        data: {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          full_name: `${formData.firstName} ${formData.lastName}`
+        }
+      })
+      if (userError) throw userError
+
+      if (businessId) {
+        // Update existing business
+        const { error } = await supabase
+          .from('businesses')
+          .update({
+            name: formData.name,
+            industry: formData.industry || null,
+            company_size: formData.companySize || null,
+            website: formData.website || null,
+            description: formData.description || null,
+          })
+          .eq('id', businessId)
+
+        if (error) throw error
+      } else {
+        // Create new business via backend
+        const response = await fetch('/api/backend/v1/businesses/bootstrap', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: formData.name,
+            industry: formData.industry,
+            company_size: formData.companySize,
+            website: formData.website,
+            description: formData.description,
+            createDefaults: true
+          })
         })
-        .eq('id', businessId)
 
-      if (error) throw error
+        if (!response.ok) throw new Error('Failed to create business')
+        
+        const newBusiness = await response.json()
+        localStorage.setItem('businessId', newBusiness.business.id)
+      }
 
-      toast.success('Company profile completed!')
+      toast.success('Profile completed!')
       localStorage.setItem('companyProfileCompleted', 'true')
       onClose()
     } catch (error: any) {
@@ -108,6 +149,30 @@ export function CompanyProfileModal({ isOpen, onClose, businessId }: CompanyProf
 
               {/* Form */}
               <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">First Name *</Label>
+                    <Input
+                      id="firstName"
+                      placeholder="John"
+                      value={formData.firstName}
+                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Last Name *</Label>
+                    <Input
+                      id="lastName"
+                      placeholder="Doe"
+                      value={formData.lastName}
+                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="name">Company Name *</Label>
                   <Input

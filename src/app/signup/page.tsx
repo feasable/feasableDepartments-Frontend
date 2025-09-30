@@ -10,7 +10,7 @@ import { Chrome } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { CompanyProfileModal } from "@/components/onboarding/CompanyProfileModal";
+import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
 import Link from "next/link";
 
 export default function SignupPage() {
@@ -21,6 +21,18 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [showModal, setShowModal] = React.useState(false);
   const [businessId, setBusinessId] = React.useState("");
+
+  // Check if user is already logged in
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.push('/dashboard');
+      }
+    };
+    checkAuth();
+  }, [router]);
 
   const images = [
     "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=60",
@@ -101,16 +113,7 @@ export default function SignupPage() {
       if (error) throw error;
 
       if (data.user) {
-        // Create business
-        const { data: businessData, error: businessError } = await supabase
-          .from('businesses')
-          .insert([{ owner_id: data.user.id }])
-          .select()
-          .single();
-
-        if (businessError) throw businessError;
-
-        setBusinessId(businessData.id);
+        // Don't create business yet - show modal to collect info
         setShowModal(true);
       }
     } catch (error: any) {
@@ -122,7 +125,7 @@ export default function SignupPage() {
 
   const handleModalClose = () => {
     setShowModal(false);
-    router.push('/departments/marketing');
+    router.push('/dashboard');
   };
 
   return (
@@ -220,12 +223,11 @@ export default function SignupPage() {
         </motion.div>
       </div>
 
-      {/* Company Profile Modal */}
+      {/* Onboarding Wizard */}
       {showModal && (
-        <CompanyProfileModal
+        <OnboardingWizard
           isOpen={showModal}
           onClose={handleModalClose}
-          businessId={businessId}
         />
       )}
     </>

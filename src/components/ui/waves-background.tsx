@@ -218,7 +218,11 @@ export function Waves({
 
     function onResize() { setSize(); setLines() }
     function onMouseMove(e: MouseEvent) { updateMouse(e.pageX, e.pageY) }
-    function onTouchMove(e: TouchEvent) { e.preventDefault(); const touch = (e as any).touches[0]; updateMouse(touch.clientX, touch.clientY) }
+    function onTouchMove(e: TouchEvent) { 
+      // Don't prevent default - allow scrolling on mobile
+      const touch = (e as any).touches[0]; 
+      updateMouse(touch.clientX, touch.clientY) 
+    }
     function updateMouse(x: number, y: number) {
       const mouse = mouseRef.current
       const b = boundingRef.current
@@ -230,7 +234,7 @@ export function Waves({
     setSize(); setLines(); requestAnimationFrame(tick)
     window.addEventListener("resize", onResize)
     window.addEventListener("mousemove", onMouseMove)
-    window.addEventListener("touchmove", onTouchMove as any, { passive: false } as any)
+    window.addEventListener("touchmove", onTouchMove as any, { passive: true } as any)
     return () => {
       window.removeEventListener("resize", onResize)
       window.removeEventListener("mousemove", onMouseMove)

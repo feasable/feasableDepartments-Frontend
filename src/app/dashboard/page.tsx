@@ -7,8 +7,19 @@ import { createClient } from '@/lib/supabase/client'
 import { backend } from '@/lib/api'
 import { getBusinessId } from '@/lib/tenant'
 import { ensureUserBusiness } from '@/lib/auth-helpers'
-import VoicePanel from '@/components/VoicePanel'
 import { toast } from 'sonner'
+import { OnboardingWizard } from '@/components/onboarding/OnboardingWizard'
+import { motion } from 'framer-motion'
+import { 
+  CheckCircle2, 
+  Clock, 
+  AlertCircle, 
+  TrendingUp,
+  Plus,
+  ArrowRight,
+  Sparkles
+} from 'lucide-react'
+import { Navbar } from '@/components/layout/Navbar'
 
 interface Task {
   id: string
@@ -20,13 +31,21 @@ interface Task {
   created_at: string
 }
 
+interface DashboardStats {
+  total: number
+  completed: number
+  in_progress: number
+  queued: number
+}
+
 export default function DashboardPage() {
   const router = useRouter()
   const [user, setUser] = useState<any>(null)
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [businessId, setBusinessId] = useState<string | null>(null)
-  const [stats, setStats] = useState({
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [stats, setStats] = useState<DashboardStats>({
     total: 0,
     completed: 0,
     in_progress: 0,
@@ -47,18 +66,27 @@ export default function DashboardPage() {
     }
     
     setUser(session.user)
+    
     // Ensure business context
     let id = getBusinessId()
     if (!id) {
       try {
         id = await ensureUserBusiness()
-      } catch {
-        router.push('/login')
+        setBusinessId(id)
+        fetchTasks(id)
+      } catch (error: any) {
+        if (error.message === 'NO_WORKSPACE') {
+          setShowOnboarding(true)
+          setLoading(false)
+        } else {
+          router.push('/login')
+        }
         return
       }
+    } else {
+      setBusinessId(id)
+      fetchTasks(id)
     }
-    setBusinessId(id)
-    fetchTasks(id)
   }
 
   const fetchTasks = async (id: string) => {
@@ -68,7 +96,7 @@ export default function DashboardPage() {
       updateStats(data.tasks || [])
     } catch (error) {
       console.error('Failed to fetch tasks:', error)
-      toast.error('Failed to load tasks')
+      // Don't show error toast if it's just empty tasks
     } finally {
       setLoading(false)
     }
@@ -85,227 +113,230 @@ export default function DashboardPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'text-green-600 bg-green-100'
-      case 'in_progress': return 'text-blue-600 bg-blue-100'
-      case 'queued': return 'text-yellow-600 bg-yellow-100'
-      default: return 'text-gray-600 bg-gray-100'
+      case 'completed': return 'text-green-600 bg-green-50 dark:bg-green-900/20'
+      case 'in_progress': return 'text-blue-600 bg-blue-50 dark:bg-blue-900/20'
+      case 'queued': return 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20'
+      default: return 'text-gray-600 bg-gray-50 dark:bg-gray-900/20'
     }
   }
 
-  const getPriorityIcon = (priority: string) => {
-    switch (priority) {
-      case 'urgent': return '🔴'
-      case 'high': return '🟠'
-      case 'medium': return '🟡'
-      case 'low': return '🟢'
-      default: return '⚪'
-    }
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-muted-foreground">Loading your workspace...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen grid-bg">
-      {/* Header */}
-      <header className="border-b-2 border-border bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="text-xl font-bold font-mono">
-                feasableDepartments
-              </Link>
-              <span className="text-sm text-muted-foreground">/</span>
-              <span className="text-sm font-mono">Dashboard</span>
-            </div>
-            <nav className="flex items-center space-x-4">
-              <Link href="/departments" className="text-sm font-mono hover:text-primary">
-                Departments
-              </Link>
-              <Link href="/tasks" className="text-sm font-mono hover:text-primary">
-                Tasks
-              </Link>
-              <Link href="/settings" className="text-sm font-mono hover:text-primary">
-                Settings
-              </Link>
-              <div className="flex items-center space-x-2 pl-4 border-l border-border">
-                <span className="text-sm text-muted-foreground">{user?.email}</span>
-                <button
-                  onClick={async () => {
-                    await createClient().auth.signOut()
-                    router.push('/')
-                  }}
-                  className="text-sm font-mono hover:text-primary"
-                >
-                  Sign Out
-                </button>
+    <>
+      <Navbar />
+      
+      <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Welcome Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <h1 className="text-4xl font-bold mb-2">
+              Welcome back, {user?.user_metadata?.first_name || 'there'}! 👋
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              Here's what's happening with your AI workspace today.
+            </p>
+          </motion.div>
+
+          {/* Stats Cards */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-card rounded-2xl p-6 border shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-primary/10 rounded-xl">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <TrendingUp className="w-5 h-5 text-green-500" />
               </div>
-            </nav>
-          </div>
-        </div>
-      </header>
+              <div className="text-3xl font-bold mb-1">{stats.total}</div>
+              <div className="text-sm text-muted-foreground">Total Tasks</div>
+            </motion.div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold font-mono mb-2">
-            Welcome back{user?.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
-          </h1>
-          <p className="text-muted-foreground">
-            Here's what's happening with your AI departments today.
-          </p>
-        </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-card rounded-2xl p-6 border shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-green-500/10 rounded-xl">
+                  <CheckCircle2 className="w-6 h-6 text-green-500" />
+                </div>
+              </div>
+              <div className="text-3xl font-bold mb-1 text-green-600">{stats.completed}</div>
+              <div className="text-sm text-muted-foreground">Completed</div>
+            </motion.div>
 
-        {/* Stats Grid */}
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
-          <div className="p-6 bg-white dark:bg-gray-900 rounded-lg sketch-border">
-            <div className="text-2xl font-bold font-mono">{stats.total}</div>
-            <div className="text-sm text-muted-foreground">Total Tasks</div>
-          </div>
-          <div className="p-6 bg-white dark:bg-gray-900 rounded-lg sketch-border">
-            <div className="text-2xl font-bold font-mono text-green-600">{stats.completed}</div>
-            <div className="text-sm text-muted-foreground">Completed</div>
-          </div>
-          <div className="p-6 bg-white dark:bg-gray-900 rounded-lg sketch-border">
-            <div className="text-2xl font-bold font-mono text-blue-600">{stats.in_progress}</div>
-            <div className="text-sm text-muted-foreground">In Progress</div>
-          </div>
-          <div className="p-6 bg-white dark:bg-gray-900 rounded-lg sketch-border">
-            <div className="text-2xl font-bold font-mono text-yellow-600">{stats.queued}</div>
-            <div className="text-sm text-muted-foreground">Queued</div>
-          </div>
-        </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-card rounded-2xl p-6 border shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-blue-500/10 rounded-xl">
+                  <Clock className="w-6 h-6 text-blue-500" />
+                </div>
+              </div>
+              <div className="text-3xl font-bold mb-1 text-blue-600">{stats.in_progress}</div>
+              <div className="text-sm text-muted-foreground">In Progress</div>
+            </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="bg-card rounded-2xl p-6 border shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-yellow-500/10 rounded-xl">
+                  <AlertCircle className="w-6 h-6 text-yellow-500" />
+                </div>
+              </div>
+              <div className="text-3xl font-bold mb-1 text-yellow-600">{stats.queued}</div>
+              <div className="text-sm text-muted-foreground">Queued</div>
+            </motion.div>
+          </div>
+
+          {/* Quick Actions */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="grid md:grid-cols-3 gap-6 mb-12"
+          >
+            <Link
+              href="/departments"
+              className="group bg-card rounded-2xl p-6 border hover:border-primary hover:shadow-lg transition-all"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Explore Spaces</h3>
+                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Browse and deploy specialized AI assistants
+              </p>
+            </Link>
+
+            <Link
+              href="/departments/marketing"
+              className="group bg-card rounded-2xl p-6 border hover:border-primary hover:shadow-lg transition-all"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Create Task</h3>
+                <Plus className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Delegate a new task to your AI team
+              </p>
+            </Link>
+
+            <Link
+              href="/pricing"
+              className="group bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl p-6 border border-primary/20 hover:border-primary hover:shadow-lg transition-all"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Upgrade Plan</h3>
+                <Sparkles className="w-5 h-5 text-primary group-hover:scale-110 transition-all" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Unlock more AI capabilities
+              </p>
+            </Link>
+          </motion.div>
+
           {/* Recent Tasks */}
-          <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 sketch-border">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold font-mono">Recent Tasks</h2>
-                <Link href="/tasks/new" className="text-sm font-mono text-primary hover:underline">
-                  + New Task
-                </Link>
-              </div>
-
-              {loading ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  Loading tasks...
-                </div>
-              ) : tasks.length === 0 ? (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-4">📋</div>
-                  <p className="text-muted-foreground mb-4">No tasks yet</p>
-                  <Link
-                    href="/tasks/new"
-                    className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 font-mono"
-                  >
-                    Create First Task
-                  </Link>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {tasks.slice(0, 5).map((task) => (
-                    <div
-                      key={task.id}
-                      className="p-4 border border-border rounded-lg hover:border-primary transition-colors cursor-pointer"
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center space-x-2">
-                          <span>{getPriorityIcon(task.priority)}</span>
-                          <h3 className="font-mono font-bold">{task.title}</h3>
-                        </div>
-                        <span className={`px-2 py-1 text-xs font-mono rounded ${getStatusColor(task.status)}`}>
-                          {task.status}
-                        </span>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-2">{task.description}</p>
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>{task.department}</span>
-                        <span>{new Date(task.created_at).toLocaleDateString()}</span>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {tasks.length > 5 && (
-                    <Link
-                      href="/tasks"
-                      className="block text-center py-2 text-sm font-mono text-primary hover:underline"
-                    >
-                      View all {tasks.length} tasks →
-                    </Link>
-                  )}
-                </div>
-              )}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="bg-card rounded-2xl p-8 border shadow-sm"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">Recent Activity</h2>
+              <Link 
+                href="/departments" 
+                className="text-sm text-primary hover:underline flex items-center gap-2"
+              >
+                View all <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
 
-            {/* Quick Actions */}
-            <div className="mt-8 bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 sketch-border">
-              <h2 className="text-xl font-bold font-mono mb-4">Quick Actions</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <Link
-                  href="/tasks/new"
-                  className="p-4 border-2 border-border rounded-lg hover:border-primary transition-colors text-center"
-                >
-                  <div className="text-2xl mb-2">➕</div>
-                  <div className="font-mono text-sm">Create Task</div>
-                </Link>
+            {tasks.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
+                  <Sparkles className="w-8 h-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">No tasks yet</h3>
+                <p className="text-muted-foreground mb-6">
+                  Get started by exploring your AI Spaces and creating your first task
+                </p>
                 <Link
                   href="/departments"
-                  className="p-4 border-2 border-border rounded-lg hover:border-primary transition-colors text-center"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors"
                 >
-                  <div className="text-2xl mb-2">🏢</div>
-                  <div className="font-mono text-sm">View Departments</div>
-                </Link>
-                <Link
-                  href="/analytics"
-                  className="p-4 border-2 border-border rounded-lg hover:border-primary transition-colors text-center"
-                >
-                  <div className="text-2xl mb-2">📊</div>
-                  <div className="font-mono text-sm">Analytics</div>
-                </Link>
-                <Link
-                  href="/settings"
-                  className="p-4 border-2 border-border rounded-lg hover:border-primary transition-colors text-center"
-                >
-                  <div className="text-2xl mb-2">⚙️</div>
-                  <div className="font-mono text-sm">Settings</div>
+                  Explore Spaces <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
-            </div>
-          </div>
-
-          {/* Right Sidebar */}
-          <div className="lg:col-span-1 space-y-8">
-            {/* Voice Panel */}
-            <VoicePanel />
-
-            {/* Activity Feed */}
-            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 sketch-border">
-              <h3 className="font-mono font-bold mb-4">Recent Activity</h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-start space-x-2">
-                  <span className="text-green-500">✓</span>
-                  <div>
-                    <p className="font-mono">Task completed</p>
-                    <p className="text-xs text-muted-foreground">Marketing campaign draft - 2h ago</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-2">
-                  <span className="text-blue-500">🔄</span>
-                  <div>
-                    <p className="font-mono">Workflow started</p>
-                    <p className="text-xs text-muted-foreground">Data analysis report - 5h ago</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-2">
-                  <span className="text-yellow-500">📋</span>
-                  <div>
-                    <p className="font-mono">Task created</p>
-                    <p className="text-xs text-muted-foreground">Q1 planning document - 1d ago</p>
-                  </div>
-                </div>
+            ) : (
+              <div className="space-y-4">
+                {tasks.slice(0, 5).map((task, index) => (
+                  <motion.div
+                    key={task.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    className="flex items-center justify-between p-4 rounded-xl hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="flex-1">
+                      <h4 className="font-medium mb-1">{task.title}</h4>
+                      <p className="text-sm text-muted-foreground line-clamp-1">
+                        {task.description}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-muted-foreground capitalize">
+                        {task.department}
+                      </span>
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
+                        {task.status.replace('_', ' ')}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-            </div>
-          </div>
+            )}
+          </motion.div>
         </div>
       </div>
-    </div>
+
+      {/* Onboarding Wizard */}
+      {showOnboarding && user && (
+        <OnboardingWizard
+          isOpen={showOnboarding}
+          onClose={() => {
+            setShowOnboarding(false)
+            window.location.reload()
+          }}
+        />
+      )}
+    </>
   )
 }

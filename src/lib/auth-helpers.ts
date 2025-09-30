@@ -26,31 +26,9 @@ export async function ensureUserBusiness(): Promise<string> {
       return businessId
     }
     
-    // No businesses found - create one
-    const email = user.email || 'user@example.com'
-    const businessName = email.split('@')[0] + ' Space'
-    
-    const bootstrapResponse = await fetch('/api/backend/v1/businesses/bootstrap', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: businessName,
-        createDefaults: true
-      })
-    })
-    
-    if (!bootstrapResponse.ok) {
-      throw new Error('Failed to create business')
-    }
-    
-    const newBusiness = await bootstrapResponse.json()
-    const businessId = newBusiness.business.id
-    
-    // Store in localStorage
-    localStorage.setItem('businessId', businessId)
-    return businessId
+    // No businesses found - need to collect company info
+    // Instead of auto-creating, throw specific error
+    throw new Error('NO_WORKSPACE')
     
   } catch (error) {
     console.error('Error ensuring user business:', error)
