@@ -47,18 +47,35 @@ async function proxy(req: NextRequest, params: { path?: string[] }) {
     method: req.method,
     headers,
     redirect: 'follow',
+    // CRITICAL FIX: Add timeout to prevent infinite hanging
+    signal: AbortSignal.timeout(5000), // 5 second timeout
   }
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     const body = await req.arrayBuffer()
     init.body = body
   }
 
-  const upstream = await fetch(target, init)
-  const resHeaders = new Headers(upstream.headers)
-  // Avoid passing hop-by-hop headers
-  resHeaders.delete('transfer-encoding')
+  try {
+    const upstream = await fetch(target, init)
+    const resHeaders = new Headers(upstream.headers)
+    // Avoid passing hop-by-hop headers
+    resHeaders.delete('transfer-encoding')
 
-  return new NextResponse(upstream.body, { status: upstream.status, headers: resHeaders })
+    return new NextResponse(upstream.body, { status: upstream.status, headers: resHeaders })
+  } catch (error: any) {
+    console.error('Backend proxy error:', error.message)
+    // Return proper error instead of hanging
+    if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+      return NextResponse.json(
+        { error: 'Backend service unavailable', message: 'Request timed out' },
+        { status: 503 }
+      )
+    }
+    return NextResponse.json(
+      { error: 'Backend service unavailable', message: error.message },
+      { status: 503 }
+    )
+  }
 }
 
 export async function GET(req: NextRequest, { params }: { params: { path?: string[] } }) {
