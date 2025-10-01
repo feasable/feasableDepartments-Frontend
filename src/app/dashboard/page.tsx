@@ -54,36 +54,48 @@ export default function DashboardPage() {
 
   useEffect(() => {
     checkAuth()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const checkAuth = async () => {
+    console.log('🔍 [Dashboard] Checking authentication...')
     const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session) {
+      console.log('❌ [Dashboard] No session found, redirecting to login')
       router.push('/login')
       return
     }
     
+    console.log('✅ [Dashboard] User authenticated:', session.user.id)
     setUser(session.user)
     
     // Ensure business context
     let id = getBusinessId()
+    console.log('🔍 [Dashboard] Business ID from localStorage:', id)
+    
     if (!id) {
+      console.log('🔍 [Dashboard] No business ID in localStorage, calling ensureUserBusiness...')
       try {
         id = await ensureUserBusiness()
+        console.log('✅ [Dashboard] Business found:', id)
         setBusinessId(id)
         fetchTasks(id)
       } catch (error: any) {
+        console.log('⚠️ [Dashboard] ensureUserBusiness error:', error.message)
         if (error.message === 'NO_WORKSPACE') {
+          console.log('📝 [Dashboard] No workspace found, showing onboarding...')
           setShowOnboarding(true)
           setLoading(false)
         } else {
+          console.error('❌ [Dashboard] Unexpected error, redirecting to login')
           router.push('/login')
         }
         return
       }
     } else {
+      console.log('✅ [Dashboard] Using cached business ID')
       setBusinessId(id)
       fetchTasks(id)
     }

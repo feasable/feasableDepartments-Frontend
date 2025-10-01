@@ -64,13 +64,24 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
     const supabase = createClient()
 
     try {
+      console.log('🔍 [Onboarding] Getting session...')
       const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-      if (sessionError || !session?.user) {
+      
+      if (sessionError) {
+        console.error('❌ [Onboarding] Session error:', sessionError)
         throw new Error('Please log in to complete your profile')
       }
+      
+      if (!session?.user) {
+        console.error('❌ [Onboarding] No user in session')
+        throw new Error('Please log in to complete your profile')
+      }
+      
       const user = session.user
+      console.log('✅ [Onboarding] User authenticated:', user.id)
 
       // Update user metadata
+      console.log('🔍 [Onboarding] Updating user metadata...')
       const { error: userError } = await supabase.auth.updateUser({
         data: {
           first_name: formData.firstName,
@@ -78,10 +89,15 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
           full_name: `${formData.firstName} ${formData.lastName}`
         }
       })
-      if (userError) throw userError
+      if (userError) {
+        console.error('❌ [Onboarding] User metadata update failed:', userError)
+        throw userError
+      }
+      console.log('✅ [Onboarding] User metadata updated')
 
       if (businessId) {
         // Update existing business
+        console.log('🔍 [Onboarding] Updating existing business:', businessId)
         const { error } = await supabase
           .from('businesses')
           .update({
@@ -93,32 +109,41 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
           })
           .eq('id', businessId)
 
-        if (error) throw error
-      } else {
-        // Create new business via backend
-        const response = await fetch('/api/backend/v1/businesses/bootstrap', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: formData.companyName,
-            industry: formData.industry,
-            company_size: formData.companySize,
-            website: formData.website,
-            description: formData.description,
-            createDefaults: true
-          })
-        })
-
-        if (!response.ok) {
-          const error = await response.json()
-          throw new Error(error.message || 'Failed to create workspace')
+        if (error) {
+          console.error('❌ [Onboarding] Business update failed:', error)
+          throw error
         }
+        console.log('✅ [Onboarding] Business updated')
+      } else {
+        // ⚠️ BACKEND INTEGRATION POINT #1: Business Creation
+        // TODO: When backend is ready, replace this with API call to:
+        // POST /api/backend/v1/businesses/bootstrap
+        // For now, create directly in Supabase
         
-        const newBusiness = await response.json()
-        localStorage.setItem('businessId', newBusiness.business.id)
+        console.log('🔍 [Onboarding] Creating new business in Supabase...')
+        const { data: newBusiness, error: createError } = await supabase
+          .from('businesses')
+          .insert({
+            name: formData.companyName,
+            owner_id: user.id,
+            industry: formData.industry || null,
+            company_size: formData.companySize || null,
+            website: formData.website || null,
+            description: formData.description || null,
+          })
+          .select()
+          .single()
+
+        if (createError) {
+          console.error('❌ [Onboarding] Business creation failed:', createError)
+          throw createError
+        }
+        console.log('✅ [Onboarding] Business created:', newBusiness.id)
+        localStorage.setItem('businessId', newBusiness.id)
       }
 
       localStorage.setItem('companyProfileCompleted', 'true')
+      console.log('🎉 [Onboarding] Complete! Showing success screen...')
       setCurrentStep('success')
     } catch (error: any) {
       console.error('Onboarding error:', error)
@@ -386,7 +411,7 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="bg-card rounded-2xl shadow-2xl max-w-2xl w-full border relative overflow-hidden"
+          className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full border-2 border-gray-200 dark:border-gray-600 relative overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Progress Bar */}
