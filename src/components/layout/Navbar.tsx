@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { GlassButton } from '@/components/ui/glass-button'
@@ -71,15 +70,8 @@ export function Navbar() {
       >
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
-            {/* Logo without Glass Effect */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <Image
-                src="/images/fovvydotted.png"
-                alt="feasableSpaces"
-                width={48}
-                height={48}
-                className="group-hover:scale-110 transition-transform"
-              />
+            {/* Logo Text Only */}
+            <Link href="/" className="flex items-center group">
               <span className="text-xl">
                 <span className="font-serif font-light">feasable</span><span className="font-serif font-bold">Spaces</span>
               </span>

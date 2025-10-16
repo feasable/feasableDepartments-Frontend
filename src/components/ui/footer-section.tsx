@@ -4,7 +4,6 @@ import React from 'react'
 import type { ComponentProps, ReactNode } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Facebook, Instagram, Youtube, Linkedin, Twitter, Github, Mail } from 'lucide-react'
-import Image from 'next/image'
 
 interface FooterLink {
   title: string
@@ -72,8 +71,7 @@ export function Footer() {
         <div className="grid gap-8 lg:grid-cols-5">
           {/* Brand Section */}
           <AnimatedContainer className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-2">
-              <Image src="/images/fovvydotted.png" alt="feasableSpaces" width={28} height={28} className="opacity-90" />
+            <div className="flex items-center">
               <span className="text-xl">
               <span className="font-serif font-light">feasable</span><span className="font-serif font-bold">Spaces</span>
               </span>
