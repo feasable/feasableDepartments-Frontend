@@ -6,13 +6,13 @@ import VoicePanel from '@/components/VoicePanel'
 import DepartmentCard from '@/components/DepartmentCard'
 import { createClient } from '@/lib/supabase/client'
 
-const DEPARTMENTS = [
+const Spaces = [
   {
     id: 'project_management',
     title: 'Project Management',
     description: 'Task breakdown, timeline management, and resource allocation',
     icon: '📋',
-    href: '/departments/project-management',
+    href: '/Spaces/project-management',
     status: 'active' as const
   },
   {
@@ -20,7 +20,7 @@ const DEPARTMENTS = [
     title: 'Marketing',
     description: 'Content creation, campaign planning, and social media',
     icon: '🎨',
-    href: '/departments/marketing',
+    href: '/Spaces/marketing',
     status: 'active' as const
   },
   {
@@ -28,7 +28,7 @@ const DEPARTMENTS = [
     title: 'Data Analytics',
     description: 'Reports, insights, and data visualization',
     icon: '📊',
-    href: '/departments/data-analytics',
+    href: '/Spaces/data-analytics',
     status: 'beta' as const
   },
   {
@@ -36,7 +36,7 @@ const DEPARTMENTS = [
     title: 'Finance',
     description: 'Invoicing, expense tracking, and financial reports',
     icon: '💰',
-    href: '/departments/finance',
+    href: '/Spaces/finance',
     status: 'coming_soon' as const
   },
   {
@@ -44,7 +44,7 @@ const DEPARTMENTS = [
     title: 'Operations',
     description: 'Process optimization and workflow automation',
     icon: '⚙️',
-    href: '/departments/operations',
+    href: '/Spaces/operations',
     status: 'coming_soon' as const
   },
   {
@@ -52,7 +52,7 @@ const DEPARTMENTS = [
     title: 'Risk & Compliance',
     description: 'Risk assessment and regulatory compliance',
     icon: '🛡️',
-    href: '/departments/risk',
+    href: '/Spaces/risk',
     status: 'coming_soon' as const
   }
 ]
@@ -83,8 +83,8 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <h1 className="text-xl font-bold font-mono">feasableDepartments</h1>
-              <span className="text-xs text-muted-foreground">by feasableLabs</span>
+              <h1 className="text-xl font-bold font-mono">lunoSpaces</h1>
+              <span className="text-xs text-muted-foreground">by lunoLabs</span>
             </div>
             <nav className="flex items-center space-x-4">
               {user ? (
@@ -124,7 +124,7 @@ export default function HomePage() {
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-5xl font-bold font-mono mb-4">
-            AI Departments That Work Like Humans
+            AI Spaces That Work Like Humans
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Delegate tasks to specialized AI assistants via voice or text. 
@@ -153,11 +153,11 @@ export default function HomePage() {
       <section className="py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Departments Grid */}
+            {/* Spaces Grid */}
             <div className="lg:col-span-2">
-              <h3 className="text-2xl font-bold font-mono mb-6">Available Departments</h3>
+              <h3 className="text-2xl font-bold font-mono mb-6">Available Spaces</h3>
               <div className="grid md:grid-cols-2 gap-4">
-                {DEPARTMENTS.map((dept) => (
+                {Spaces.map((dept) => (
                   <DepartmentCard
                     key={dept.id}
                     {...dept}
@@ -217,7 +217,7 @@ export default function HomePage() {
               <div className="text-4xl mb-4">🤖</div>
               <h4 className="font-mono font-bold mb-2">2. AI Processes</h4>
               <p className="text-sm text-muted-foreground">
-                Specialized departments handle tasks with domain expertise
+                Specialized Spaces handle tasks with domain expertise
               </p>
             </div>
             <div className="text-center">
@@ -234,12 +234,12 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="py-8 px-4 border-t-2 border-border">
         <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
-          <p className="font-mono">© 2024 feasableLabs. All rights reserved.</p>
+          <p className="font-mono">© 2024 lunoLabs. All rights reserved.</p>
           <div className="mt-4 space-x-4">
             <Link href="/privacy" className="hover:text-primary">Privacy</Link>
             <Link href="/terms" className="hover:text-primary">Terms</Link>
             <Link href="/docs" className="hover:text-primary">Documentation</Link>
-            <Link href="mailto:support@feasable.org" className="hover:text-primary">Support</Link>
+            <Link href="mailto:support@luno.org" className="hover:text-primary">Support</Link>
           </div>
         </div>
       </footer>

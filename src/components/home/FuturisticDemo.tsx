@@ -13,7 +13,7 @@ interface Department {
   sample: string
 }
 
-const departments: Department[] = [
+const Spaces: Department[] = [
   {
     id: 'marketing',
     name: 'Marketing Specialist: Mira',
@@ -38,7 +38,7 @@ const departments: Department[] = [
 ]
 
 export default function FuturisticDemo() {
-  const [selectedDept, setSelectedDept] = useState(departments[0])
+  const [selectedDept, setSelectedDept] = useState(Spaces[0])
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [response, setResponse] = useState('')
@@ -79,10 +79,10 @@ export default function FuturisticDemo() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Meet the <span className="font-serif italic">Team</span>
+            Meet <span className="font-serif italic">your</span> Team
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Chat with our AI departments and see how they can transform your workflow
+            Chat with our AI Spaces and see how they can transform your workflow
           </p>
         </motion.div>
 
@@ -94,7 +94,7 @@ export default function FuturisticDemo() {
           transition={{ delay: 0.1 }}
           className="flex flex-wrap justify-center gap-3 mb-12"
         >
-          {departments.map((dept) => (
+          {Spaces.map((dept) => (
             <button
               key={dept.id}
               onClick={() => setSelectedDept(dept)}
@@ -194,7 +194,7 @@ export default function FuturisticDemo() {
           {/* CTA */}
           <div className="mt-12 text-center">
             <p className="text-muted-foreground mb-4">
-              Ready for the full experience? Get unlimited messages and all departments.
+              Ready for the full experience? Get unlimited messages and all Spaces.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a

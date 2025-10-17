@@ -22,7 +22,7 @@ const footerLinks: FooterSection[] = [
     links: [
       { title: 'Features', href: '/features' },
       { title: 'Pricing', href: '/pricing' },
-      { title: 'Departments', href: '/departments' },
+      { title: 'Spaces', href: '/Spaces' },
       { title: 'Integration', href: '/integrations' },
     ],
   },
@@ -56,10 +56,10 @@ const footerLinks: FooterSection[] = [
 ]
 
 const socialLinks = [
-  { title: 'Twitter', href: 'https://twitter.com/feasable', icon: Twitter },
-  { title: 'LinkedIn', href: 'https://linkedin.com/company/feasable', icon: Linkedin },
-  { title: 'GitHub', href: 'https://github.com/feasable', icon: Github },
-  { title: 'Email', href: 'mailto:hello@feasable.org', icon: Mail },
+  { title: 'Twitter', href: 'https://twitter.com/luno', icon: Twitter },
+  { title: 'LinkedIn', href: 'https://linkedin.com/company/luno', icon: Linkedin },
+  { title: 'GitHub', href: 'https://github.com/luno', icon: Github },
+  { title: 'Email', href: 'mailto:hello@luno.org', icon: Mail },
 ]
 
 export function Footer() {
@@ -73,12 +73,12 @@ export function Footer() {
           <AnimatedContainer className="lg:col-span-2 space-y-4">
             <div className="flex items-center">
               <span className="text-xl">
-              <span className="font-serif font-light">feasable</span><span className="font-serif font-bold">Spaces</span>
+              <span className="font-serif font-light italic" style={{fontFamily: 'cursive'}}>luno</span><span className="font-serif font-bold">Spaces</span>
               </span>
             </div>
             <p className="text-muted-foreground text-sm max-w-sm">
               AI-powered workspaces that work like humans. Delegate tasks, automate workflows, 
-              and scale your business with intelligent departments.
+              and scale your business with intelligent Spaces.
             </p>
             <div className="flex gap-4 pt-4">
               {socialLinks.map((link) => (
@@ -120,7 +120,7 @@ export function Footer() {
         <AnimatedContainer delay={0.4}>
           <div className="mt-12 pt-8 border-t border-border/50 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} feasableSpaces. All rights reserved.
+              © {new Date().getFullYear()} <span className="font-serif font-light italic" style={{fontFamily: 'cursive'}}>luno</span><span className="font-serif font-bold">Spaces</span>. All rights reserved.
             </p>
             <div className="flex gap-6 text-sm text-muted-foreground">
               <a href="/sitemap" className="hover:text-foreground transition-colors">

@@ -8,7 +8,7 @@ const values = [
   {
     icon: <Zap className="w-6 h-6" />,
     title: 'Innovation First',
-    description: 'We push the boundaries of AI to create intelligent departments that truly understand business needs.'
+    description: 'We push the boundaries of AI to create intelligent Spaces that truly understand business needs.'
   },
   {
     icon: <Users className="w-6 h-6" />,
@@ -89,11 +89,11 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold mb-6">Our Story</h2>
             <div className="space-y-4 text-muted-foreground">
               <p>
-                FeasableDepartments was born from a simple observation: businesses spend 
+                lunoSpaces was born from a simple observation: businesses spend 
                 countless hours on repetitive tasks that could be automated intelligently.
               </p>
               <p>
-                Founded by FeasableLabs, we set out to create AI departments that work 
+                Founded by lunoLabs, we set out to create AI Spaces that work 
                 like human teams - understanding context, learning from feedback, and 
                 delivering real results.
               </p>
@@ -188,7 +188,7 @@ export default function AboutPage() {
               Join the AI Revolution
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Start automating your business processes with intelligent AI departments
+              Start automating your business processes with intelligent AI Spaces
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link

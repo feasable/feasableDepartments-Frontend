@@ -1,4 +1,4 @@
-# feasableDepartments Frontend
+# lunoSpaces Frontend
 
 Modern Next.js dashboard for AI-powered business automation. Features voice interaction, real-time updates, and a monochrome sketch aesthetic.
 
@@ -51,7 +51,7 @@ src/
 ├── app/                    # Next.js app router pages
 │   ├── (auth)/            # Authentication pages
 │   ├── dashboard/         # Main dashboard
-│   ├── departments/       # Department views
+│   ├── Spaces/       # Department views
 │   └── tasks/            # Task management
 ├── components/            # Reusable components
 │   ├── VoicePanel.tsx    # Vapi voice interface
@@ -209,10 +209,10 @@ npm run test:coverage
 
 ## 📄 License
 
-Proprietary - feasableLabs © 2024
+Proprietary - lunoLabs © 2024
 
 ## 🆘 Support
 
-- Email: support@feasable.org
-- Documentation: [docs.feasable.org](https://docs.feasable.org)
-- Discord: [Join our community](https://discord.gg/feasable)
+- Email: support@luno.org
+- Documentation: [docs.luno.org](https://docs.luno.org)
+- Discord: [Join our community](https://discord.gg/luno)

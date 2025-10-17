@@ -235,7 +235,7 @@ export default function DashboardPage() {
             className="grid md:grid-cols-3 gap-6 mb-12"
           >
             <Link
-              href="/departments"
+              href="/Spaces"
               className="group bg-card rounded-2xl p-6 border hover:border-primary hover:shadow-lg transition-all"
             >
               <div className="flex items-center justify-between mb-4">
@@ -248,7 +248,7 @@ export default function DashboardPage() {
             </Link>
 
             <Link
-              href="/departments/marketing"
+              href="/Spaces/marketing"
               className="group bg-card rounded-2xl p-6 border hover:border-primary hover:shadow-lg transition-all"
             >
               <div className="flex items-center justify-between mb-4">
@@ -284,7 +284,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold">Recent Activity</h2>
               <Link 
-                href="/departments" 
+                href="/Spaces" 
                 className="text-sm text-primary hover:underline flex items-center gap-2"
               >
                 View all <ArrowRight className="w-4 h-4" />
@@ -301,7 +301,7 @@ export default function DashboardPage() {
                   Get started by exploring your AI Spaces and creating your first task
                 </p>
                 <Link
-                  href="/departments"
+                  href="/Spaces"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors"
                 >
                   Explore Spaces <ArrowRight className="w-4 h-4" />

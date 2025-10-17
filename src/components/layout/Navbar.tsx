@@ -73,14 +73,14 @@ export function Navbar() {
             {/* Logo Text Only */}
             <Link href="/" className="flex items-center group">
               <span className="text-xl">
-                <span className="font-serif font-light">feasable</span><span className="font-serif font-bold">Spaces</span>
+                <span className="font-serif font-light italic" style={{fontFamily: 'cursive'}}>luno</span><span className="font-serif font-bold">Spaces</span>
               </span>
             </Link>
 
             {/* Desktop Menu - Each in Glass Bubble */}
             <div className="hidden md:flex items-center gap-3">
               <GlassButton asChild size="sm">
-                <Link href="/departments"><u>Spaces</u></Link>
+                <Link href="/Spaces"><u>Spaces</u></Link>
               </GlassButton>
               <GlassButton asChild size="sm">
                 <Link href="/pricing">Pricing</Link>
@@ -138,8 +138,8 @@ export function Navbar() {
       >
         <div className="pt-24 px-6 space-y-4">
           <GlassButton asChild size="default" className="w-full">
-            <Link href="/departments" onClick={() => setMobileMenu(false)}>
-              Departments
+            <Link href="/Spaces" onClick={() => setMobileMenu(false)}>
+              Spaces
             </Link>
           </GlassButton>
           <GlassButton asChild size="default" className="w-full">

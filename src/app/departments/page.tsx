@@ -27,7 +27,7 @@ interface Department {
   gradient: string
 }
 
-const departments: Department[] = [
+const Spaces: Department[] = [
   {
     id: 'marketing',
     name: 'Marketing',
@@ -40,7 +40,7 @@ const departments: Department[] = [
       'SEO optimization'
     ],
     status: 'active',
-    href: '/departments/marketing',
+    href: '/Spaces/marketing',
     gradient: 'from-purple-500 to-pink-500'
   },
   {
@@ -55,7 +55,7 @@ const departments: Department[] = [
       'Team coordination'
     ],
     status: 'active',
-    href: '/departments/project-management',
+    href: '/Spaces/project-management',
     gradient: 'from-blue-500 to-cyan-500'
   },
   {
@@ -70,7 +70,7 @@ const departments: Department[] = [
       'Trend analysis'
     ],
     status: 'beta',
-    href: '/departments/analytics',
+    href: '/Spaces/analytics',
     gradient: 'from-green-500 to-emerald-500'
   },
   {
@@ -120,7 +120,7 @@ const departments: Department[] = [
   }
 ]
 
-export default function DepartmentsPage() {
+export default function SpacesPage() {
   return (
     <div className="min-h-screen py-20">
       {/* Hero Section - Redesigned */}
@@ -148,7 +148,7 @@ export default function DepartmentsPage() {
       <section className="px-6 pb-20">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {departments.map((dept, i) => (
+            {Spaces.map((dept, i) => (
               <motion.div
                 key={dept.id}
                 initial={{ opacity: 0, y: 30 }}

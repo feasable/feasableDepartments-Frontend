@@ -67,12 +67,12 @@ git push origin main
 
 Netlify will automatically:
 - Build your changes
-- Deploy to https://spaces.feasable.org
+- Deploy to https://spaces.luno.org
 - Show deploy logs
 
 ### Step 3: Test Everything ✅
 
-Open https://spaces.feasable.org and test:
+Open https://spaces.luno.org and test:
 
 **Mobile Test (IMPORTANT):**
 1. Open on phone or DevTools mobile view
@@ -366,7 +366,7 @@ git commit -m "fix: complete auth flow overhaul"
 git push origin main
 
 # 3. Test on production
-# Visit https://spaces.feasable.org
+# Visit https://spaces.luno.org
 # Test all scenarios listed above
 ```
 

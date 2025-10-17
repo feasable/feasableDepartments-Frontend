@@ -166,12 +166,12 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 mb-4">
               <Sparkles className="w-10 h-10 text-primary" />
             </div>
-            <h2 className="text-3xl font-bold">Welcome to FeasableSpaces! 🎉</h2>
+            <h2 className="text-3xl font-bold">Welcome to lunoSpaces! 🎉</h2>
             <p className="text-lg text-muted-foreground max-w-md mx-auto">
-              Let's get you set up in just a few steps. This will only take a minute.
+              Let's get you set up in just a few steps ~ This will only take a minute.
             </p>
             <Button onClick={handleNext} size="lg" className="mt-8">
-              Get Started <ArrowRight className="ml-2 w-4 h-4" />
+              Start <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </motion.div>
         )

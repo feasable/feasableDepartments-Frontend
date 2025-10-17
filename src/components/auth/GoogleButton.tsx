@@ -9,7 +9,7 @@ export function GoogleButton({ label = 'Continue with Google' }: { label?: strin
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/departments/marketing`,
+        redirectTo: `${window.location.origin}/Spaces/marketing`,
         queryParams: { prompt: 'select_account' },
       },
     })

@@ -4,7 +4,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    FeasableSpaces Auth System               │
+│                    lunoSpaces Auth System               │
 ├─────────────────────────────────────────────────────────────┤
 │  Supabase Auth  →  User Metadata  →  Business Creation     │
 │       ↓                  ↓                    ↓              │
@@ -209,7 +209,7 @@ Prevents confusion & errors
 ```
 ┌────────────────────────┐
 │ User visits /dashboard │
-│ or /departments/*      │
+│ or /Spaces/*      │
 └────┬───────────────────┘
      │
      ▼

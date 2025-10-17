@@ -64,7 +64,7 @@ const { data: newBusiness, error: createError } = await supabase
 
 **Action Required:**
 1. Go to Netlify Dashboard → Site Settings → Environment Variables
-2. Change `NEXT_PUBLIC_API_BASE_URL` from `http://localhost:8080` to `https://api.feasable.org`
+2. Change `NEXT_PUBLIC_API_BASE_URL` from `http://localhost:8080` to `https://api.luno.org`
 3. Or use any HTTPS URL (even placeholder - frontend will use Supabase fallback)
 
 ---
@@ -129,12 +129,12 @@ git push origin main
 
 ### After Deploy
 1. Update Netlify env vars with HTTPS backend URLs
-2. Clear browser cache and test: https://spaces.feasable.org
+2. Clear browser cache and test: https://spaces.luno.org
 3. Test onboarding flow with new account
 4. Verify dashboard loads without flickering
 
 ### Future (When Backend Ready)
-1. Deploy backend to `https://api.feasable.org`
+1. Deploy backend to `https://api.luno.org`
 2. Update Netlify env vars with real backend URL
 3. Follow `BACKEND-INTEGRATION-NOTES.md` to integrate
 4. Replace Supabase direct calls with backend API calls

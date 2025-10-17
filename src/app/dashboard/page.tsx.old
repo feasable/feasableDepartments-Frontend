@@ -121,14 +121,14 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <Link href="/" className="text-xl font-bold font-mono">
-                feasableDepartments
+                lunoSpaces
               </Link>
               <span className="text-sm text-muted-foreground">/</span>
               <span className="text-sm font-mono">Dashboard</span>
             </div>
             <nav className="flex items-center space-x-4">
-              <Link href="/departments" className="text-sm font-mono hover:text-primary">
-                Departments
+              <Link href="/Spaces" className="text-sm font-mono hover:text-primary">
+                Spaces
               </Link>
               <Link href="/tasks" className="text-sm font-mono hover:text-primary">
                 Tasks
@@ -160,7 +160,7 @@ export default function DashboardPage() {
             Welcome back{user?.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
           </h1>
           <p className="text-muted-foreground">
-            Here's what's happening with your AI departments today.
+            Here's what's happening with your AI Spaces today.
           </p>
         </div>
 
@@ -258,11 +258,11 @@ export default function DashboardPage() {
                   <div className="font-mono text-sm">Create Task</div>
                 </Link>
                 <Link
-                  href="/departments"
+                  href="/Spaces"
                   className="p-4 border-2 border-border rounded-lg hover:border-primary transition-colors text-center"
                 >
                   <div className="text-2xl mb-2">🏢</div>
-                  <div className="font-mono text-sm">View Departments</div>
+                  <div className="font-mono text-sm">View Spaces</div>
                 </Link>
                 <Link
                   href="/analytics"

@@ -16,29 +16,29 @@ import {
 } from 'lucide-react'
 import { Button, ButtonProps } from '@/components/ui/button'
 
-const APP_EMAIL = 'hello@feasable.org'
+const APP_EMAIL = 'hello@luno.org'
 const APP_PHONE = '+264 81 483 7080'
 
 export function ContactPage() {
   const socialLinks = [
     {
       icon: Github,
-      href: 'https://github.com/feasable',
+      href: 'https://github.com/luno',
       label: 'GitHub',
     },
     {
       icon: Twitter,
-      href: 'https://twitter.com/feasable',
+      href: 'https://twitter.com/luno',
       label: 'Twitter',
     },
     {
       icon: Linkedin,
-      href: 'https://www.linkedin.com/company/feasable-labs/?viewAsMember=true',
+      href: 'https://www.linkedin.com/company/luno-labs/?viewAsMember=true',
       label: 'LinkedIn',
     },
     {
       icon: MessageSquare,
-      href: 'https://discord.gg/feasable',
+      href: 'https://discord.gg/luno',
       label: 'Discord',
     },
   ]
@@ -57,7 +57,7 @@ export function ContactPage() {
         <div className="flex grow flex-col justify-center px-4 md:px-6 pt-32 pb-16">
           <h1 className="text-4xl font-bold md:text-5xl">Contact Us</h1>
           <p className="text-muted-foreground mb-5 text-base">
-            Get in touch with the FeasableDepartments team. We're here to help you build your AI workforce.
+            Get in touch with the lunoSpaces team. We're here to help you build your AI workforce.
           </p>
         </div>
         <BorderSeparator />
@@ -134,7 +134,7 @@ export function ContactPage() {
             </div>
             <div className="text-center pt-4">
               <p className="text-muted-foreground text-sm max-w-md mx-auto">
-                Join our community of businesses using AI departments to scale their operations.
+                Join our community of businesses using AI Spaces to scale their operations.
               </p>
             </div>
           </div>

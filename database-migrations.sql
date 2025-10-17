@@ -1,5 +1,5 @@
 -- =====================================================
--- FeasableSpaces Database Schema Migration
+-- lunoSpaces Database Schema Migration
 -- Run this in your Supabase SQL Editor
 -- =====================================================
 

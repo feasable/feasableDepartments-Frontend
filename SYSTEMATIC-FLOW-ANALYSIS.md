@@ -248,7 +248,7 @@ console.log('Found businesses:', businesses);
 ### Post-Deployment Tests
 
 #### Test 1: Sign Up Flow
-1. [ ] Open https://spaces.feasable.org
+1. [ ] Open https://spaces.luno.org
 2. [ ] Click "Get Started"
 3. [ ] Enter email: `test@example.com`
 4. [ ] Enter password: `test1234`
@@ -286,7 +286,7 @@ console.log('Found businesses:', businesses);
 
 #### Test 5: Session Persistence
 1. [ ] Close browser tab
-2. [ ] Open https://spaces.feasable.org/dashboard
+2. [ ] Open https://spaces.luno.org/dashboard
 3. [ ] **Expected:** Dashboard loads immediately
 4. [ ] **Expected:** No login redirect
 5. [ ] **Expected:** User data visible
@@ -433,7 +433,7 @@ git push origin main
 
 ### Step 4: Test Complete Flow (5 min)
 1. Wait for Netlify deploy
-2. Open https://spaces.feasable.org
+2. Open https://spaces.luno.org
 3. Sign up with **NEW email**
 4. Complete onboarding
 5. Verify dashboard loads

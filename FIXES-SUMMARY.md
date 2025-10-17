@@ -232,7 +232,7 @@ src/
 │   │   └── page.tsx ✨ MODIFIED (check auth, redirect to dashboard)
 │   ├── signup/
 │   │   └── page.tsx ✨ MODIFIED (check auth, use new wizard)
-│   └── departments/
+│   └── Spaces/
 │       └── marketing/
 │           └── page.tsx ✨ MODIFIED (handle NO_WORKSPACE)
 ├── components/
@@ -282,7 +282,7 @@ git push origin main
 
 ### 4. Verify Deployment
 - Wait for Netlify build
-- Test on https://spaces.feasable.org
+- Test on https://spaces.luno.org
 - Check all auth flows
 - Test on real mobile device
 

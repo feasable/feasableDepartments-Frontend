@@ -9,7 +9,7 @@ const plans = [
   {
     name: 'Starter',
     price: 'Free',
-    description: 'Perfect for trying out AI departments',
+    description: 'Perfect for trying out AI Spaces',
     features: [
       '5 messages per month',
       '1 department access',
@@ -28,7 +28,7 @@ const plans = [
     description: 'For growing teams and businesses',
     features: [
       'Unlimited messages',
-      'All departments',
+      'All Spaces',
       'Priority processing',
       'Advanced analytics',
       'API access',
@@ -45,7 +45,7 @@ const plans = [
     description: 'Tailored for your organization',
     features: [
       'Everything in Professional',
-      'Custom departments',
+      'Custom Spaces',
       'Dedicated infrastructure',
       'SLA guarantees',
       'White-label options',
@@ -54,7 +54,7 @@ const plans = [
       'Custom AI training'
     ],
     cta: 'Contact Sales',
-    href: 'mailto:enterprise@feasable.org',
+    href: 'mailto:enterprise@luno.org',
     popular: false
   }
 ]
@@ -161,7 +161,7 @@ export default function PricingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="mailto:sales@feasable.org"
+                href="mailto:sales@luno.org"
                 className="px-8 py-3 bg-primary text-primary-foreground rounded-full font-medium hover:shadow-lg hover:shadow-primary/25 transition-all"
               >
                 Contact Sales

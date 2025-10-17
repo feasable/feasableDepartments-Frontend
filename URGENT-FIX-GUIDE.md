@@ -66,7 +66,7 @@ If you have a deployed backend, update `.env.local`:
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
 
 # To your production URL:
-NEXT_PUBLIC_API_BASE_URL=https://api.feasable.org
+NEXT_PUBLIC_API_BASE_URL=https://api.luno.org
 ```
 
 **Option C: Work Without Backend (Temporary)**

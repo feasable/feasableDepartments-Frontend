@@ -39,7 +39,7 @@ interface Department {
   responses: string[]
 }
 
-const departments: Department[] = [
+const Spaces: Department[] = [
   {
     id: 'marketing',
     name: 'Marketing',
@@ -99,7 +99,7 @@ const departments: Department[] = [
 export default function InteractiveDemo() {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState('')
-  const [selectedDept, setSelectedDept] = useState(departments[0])
+  const [selectedDept, setSelectedDept] = useState(Spaces[0])
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [suggestedTask, setSuggestedTask] = useState(0)
@@ -202,7 +202,7 @@ export default function InteractiveDemo() {
           Meet the Team!
         </h2>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Chat with our AI departments and see how they can transform your workflow.
+          Chat with our AI Spaces and see how they can transform your workflow.
           This is just a demo - imagine the full power with your account.
         </p>
       </motion.div>
@@ -218,7 +218,7 @@ export default function InteractiveDemo() {
           {/* Department Selector */}
           <div className="border-b border-border/50 p-4">
             <div className="flex gap-2 overflow-x-auto pb-2">
-              {departments.map((dept) => (
+              {Spaces.map((dept) => (
                 <motion.button
                   key={dept.id}
                   onClick={() => {
@@ -423,7 +423,7 @@ export default function InteractiveDemo() {
           className="text-center mt-8"
         >
           <p className="text-muted-foreground mb-4">
-            Ready for the full experience? Get unlimited messages and all departments.
+            Ready for the full experience? Get unlimited messages and all Spaces.
           </p>
           <div className="flex gap-4 justify-center">
             <motion.a

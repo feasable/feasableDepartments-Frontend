@@ -106,7 +106,7 @@ Netlify will auto-deploy.
 
 ### Step 2: Test Flow
 
-1. **Visit** https://spaces.feasable.org
+1. **Visit** https://spaces.luno.org
 2. **Sign Up** with new account
 3. **Expected:** Onboarding wizard appears (not infinite loading)
 4. **Complete** all 5 steps

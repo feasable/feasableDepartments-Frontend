@@ -1,5 +1,5 @@
 -- =====================================================
--- COMPLETE FEASABLESPACES DATABASE SETUP
+-- COMPLETE lunoSPACES DATABASE SETUP
 -- Run this ONCE in your Supabase SQL Editor
 -- =====================================================
 

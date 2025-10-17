@@ -1,9 +1,9 @@
 # ✅ Deployment Checklist - Print & Check Off
 
-**Project:** FeasableSpaces Auth Flow Overhaul  
+**Project:** lunoSpaces Auth Flow Overhaul  
 **Date:** _____________  
 **Deployed By:** _____________  
-**Deploy URL:** https://spaces.feasable.org
+**Deploy URL:** https://spaces.luno.org
 
 ---
 
@@ -44,7 +44,7 @@
 
 ### Google OAuth Setup
 - [ ] https://zoqqrvmfumzfnhdrgjyk.supabase.co/auth/v1/callback added to Google Console
-- [ ] https://spaces.feasable.org/auth/callback added to Google Console
+- [ ] https://spaces.luno.org/auth/callback added to Google Console
 - [ ] OAuth consent screen configured
 - [ ] Credentials active and not expired
 
@@ -72,7 +72,7 @@
 ## 🧪 Testing - Desktop
 
 ### Homepage
-- [ ] Navigate to https://spaces.feasable.org
+- [ ] Navigate to https://spaces.luno.org
 - [ ] Homepage loads without errors
 - [ ] Wave background animates
 - [ ] All sections visible
@@ -153,7 +153,7 @@
 ### Device: _____________ (iPhone/Android/etc.)
 
 ### Homepage Scrolling
-- [ ] Open https://spaces.feasable.org on mobile
+- [ ] Open https://spaces.luno.org on mobile
 - [ ] Try to scroll up
 - [ ] ✅ Scrolling works smoothly
 - [ ] Try to scroll down

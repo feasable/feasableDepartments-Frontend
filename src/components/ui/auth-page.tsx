@@ -87,7 +87,7 @@ export function AuthPage({ mode = 'login', onModeChange }: AuthPageProps) {
               first_name: formData.firstName,
               last_name: formData.lastName,
             },
-            emailRedirectTo: `${window.location.origin}/departments/marketing`,
+            emailRedirectTo: `${window.location.origin}/Spaces/marketing`,
           },
         })
         if (signUpError) throw signUpError
@@ -101,7 +101,7 @@ export function AuthPage({ mode = 'login', onModeChange }: AuthPageProps) {
         
         // Success - ensure user has a business, then redirect
         await ensureUserBusiness()
-        router.push('/departments/marketing')
+        router.push('/Spaces/marketing')
       } else {
         // Login flow
         const { error: loginError } = await supabase.auth.signInWithPassword({
@@ -112,7 +112,7 @@ export function AuthPage({ mode = 'login', onModeChange }: AuthPageProps) {
         
         // Success - ensure user has a business, then redirect
         await ensureUserBusiness()
-        router.push('/departments/marketing')
+        router.push('/Spaces/marketing')
       }
     } catch (error: any) {
       toast.error(error.message || 'Authentication failed')
@@ -134,7 +134,7 @@ export function AuthPage({ mode = 'login', onModeChange }: AuthPageProps) {
       const { error } = await supabase.auth.signInWithOtp({
         email: formData.email,
         options: {
-          emailRedirectTo: `${window.location.origin}/departments/marketing`,
+          emailRedirectTo: `${window.location.origin}/Spaces/marketing`,
         },
       })
       if (error) throw error
@@ -159,7 +159,7 @@ export function AuthPage({ mode = 'login', onModeChange }: AuthPageProps) {
         >
           <Building2 className="size-8 text-primary" />
           <p className="text-2xl">
-            <span className="font-light">feasable</span><span className="font-bold">Spaces</span>
+            <span className="font-light">luno</span><span className="font-bold">Spaces</span>
           </p>
         </motion.div>
 
@@ -171,7 +171,7 @@ export function AuthPage({ mode = 'login', onModeChange }: AuthPageProps) {
         >
           <blockquote className="space-y-4">
             <p className="text-xl">
-              &ldquo;feasableSpaces transformed our workflow completely. 
+              &ldquo;lunoSpaces transformed our workflow completely. 
               Our AI workspaces handle everything seamlessly.&rdquo;
             </p>
             <footer className="font-mono text-sm font-semibold">
@@ -213,7 +213,7 @@ export function AuthPage({ mode = 'login', onModeChange }: AuthPageProps) {
           >
             <Building2 className="size-8 text-primary" />
             <p className="text-2xl">
-              <span className="font-light">feasable</span><span className="font-bold">Spaces</span>
+              <span className="font-light">luno</span><span className="font-bold">Spaces</span>
             </p>
           </motion.div>
 
@@ -236,7 +236,7 @@ export function AuthPage({ mode = 'login', onModeChange }: AuthPageProps) {
             <p className="text-muted-foreground">
               {isSignup 
                 ? 'Start building your AI workspace today' 
-                : 'Continue managing your AI departments'
+                : 'Continue managing your AI Spaces'
               }
             </p>
           </motion.div>

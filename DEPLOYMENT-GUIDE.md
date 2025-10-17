@@ -27,7 +27,7 @@ NEXT_PUBLIC_API_URL=your-backend-api-url
 ### 3. Google OAuth Configuration
 Ensure these redirect URLs are added in Google Console:
 - `https://zoqqrvmfumzfnhdrgjyk.supabase.co/auth/v1/callback`
-- `https://spaces.feasable.org/auth/callback`
+- `https://spaces.luno.org/auth/callback`
 - `http://localhost:3000/auth/callback` (for local testing)
 
 ---
@@ -112,7 +112,7 @@ Ensure these redirect URLs are added in Google Console:
    - If has tasks: list of recent tasks with status badges
 
 ### Test 9: Department Page Auth
-1. While logged out, try to visit `/departments/marketing`
+1. While logged out, try to visit `/Spaces/marketing`
 2. **Expected:** Redirect to `/login`
 3. Log in
 4. **Expected:** If no workspace → redirect to `/dashboard` which shows onboarding
@@ -198,7 +198,7 @@ git push origin main
 
 ### Step 3: Verify Deployment
 1. Wait for Netlify build to complete
-2. Visit https://spaces.feasable.org
+2. Visit https://spaces.luno.org
 3. Test mobile scrolling
 4. Test auth flows (signup, login, Google OAuth)
 5. Test onboarding wizard
@@ -270,7 +270,7 @@ git push origin main
 - `src/components/layout/Navbar.tsx` - Show "FirstName L." format
 - `src/lib/auth-helpers.ts` - Throw NO_WORKSPACE error
 - `src/app/auth/callback/route.ts` - Redirect to dashboard
-- `src/app/departments/marketing/page.tsx` - Handle NO_WORKSPACE
+- `src/app/Spaces/marketing/page.tsx` - Handle NO_WORKSPACE
 
 ---
 

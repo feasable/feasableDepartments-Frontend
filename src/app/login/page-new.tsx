@@ -32,7 +32,7 @@ export default function LoginPage() {
       if (error) throw error
       
       toast.success('Welcome back!')
-      router.push('/departments/marketing')
+      router.push('/Spaces/marketing')
     } catch (error: any) {
       toast.error(error?.message || 'Invalid credentials')
     } finally {
@@ -49,7 +49,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/departments/marketing`,
+          emailRedirectTo: `${window.location.origin}/Spaces/marketing`,
         },
       })
       
@@ -77,19 +77,19 @@ export default function LoginPage() {
           <Link href="/" className="flex items-center gap-2 mb-8">
             <Image
               src="/images/fovvydotted.png"
-              alt="Feasable"
+              alt="luno"
               width={40}
               height={40}
               className="dark:invert"
             />
-            <span className="text-2xl font-bold">feasable</span>
+            <span className="text-2xl font-bold">luno</span>
           </Link>
 
           <h1 className="text-3xl font-bold mb-2">Welcome back</h1>
           <p className="text-muted-foreground mb-8">
             {otpSent
               ? 'We sent you a magic link!'
-              : 'Sign in to manage your AI departments'}
+              : 'Sign in to manage your AI Spaces'}
           </p>
 
           {otpSent ? (

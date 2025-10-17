@@ -185,7 +185,7 @@ Click "Save"
 Netlify Dashboard → Site Settings → Environment Variables
 Change: NEXT_PUBLIC_API_BASE_URL
 From: http://localhost:8080
-To: https://api.feasable.org
+To: https://api.luno.org
 Click "Save"
 ```
 

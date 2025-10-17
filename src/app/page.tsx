@@ -3,11 +3,21 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Sparkles, Zap, Shield, Users, BarChart3, MessageSquare } from 'lucide-react'
-import VerticalBarsFixed from '@/components/ui/vertical-bars-fixed'
-import { Waves } from '@/components/ui/waves-background'
+import dynamic from 'next/dynamic'
+import { ArrowRight, Sparkles, Zap, Shield, Users, BarChart3, MessageSquare, Cpu, ShieldCheck, Layers } from 'lucide-react'
 import FuturisticDemo from '@/components/home/FuturisticDemo'
 import { GlassButton } from '@/components/ui/glass-button'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+
+// Dynamic imports to avoid SSR issues with Three.js
+const DotScreenShader = dynamic(() => import('@/components/ui/dot-shader-background-simple').then(mod => ({ default: mod.DotScreenShader })), { 
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-gradient-to-br from-background via-background to-muted/20" />
+})
+
+// Removed Scene - causing SSR errors with Three.js
+// Using CSS animations instead
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -19,7 +29,7 @@ export default function Home() {
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.6])
 
-  const departments = [
+  const Spaces = [
     {
       icon: <Users className="w-6 h-6" />,
       title: 'Project Management',
@@ -50,22 +60,11 @@ export default function Home() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-background overflow-hidden">
-      {/* Fixed Animated Background */}
-      <VerticalBarsFixed 
-        backgroundColor="#0b0f1a" 
-        lineColor="#334155" 
-        barColor="#93c5fd" 
-        animationSpeed={0.0003}
-      />
-      
-      {/* Subtle Overlay for better text contrast */}
-      <div className="fixed inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/80 pointer-events-none" />
-      
-      {/* Hero Section */}
+      {/* Hero Section with Dot Shader Background */}
       <section className="relative min-h-screen flex items-center justify-center px-6 pt-20">
-        {/* Waves background overlay for hero only */}
-        <div className="absolute inset-0 -z-0 pointer-events-none opacity-30">
-          <Waves className="h-full w-full" lineColor="#64748b" backgroundColor="transparent" />
+        {/* Animated Dot Shader Background */}
+        <div className="absolute inset-0">
+          <DotScreenShader />
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto text-center">
@@ -73,9 +72,9 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
+            className="text-5xl md:text-7xl font-light tracking-tight mix-blend-exclusion text-white mb-6 leading-tight whitespace-normal"
           >
-            Agentic Departments That <br className="hidden md:block" />
+            Agentic Spaces That <br className="hidden md:block" />
             <span className="font-serif italic">Work Like Humans</span>
           </motion.h1>
           
@@ -83,7 +82,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed"
+            className="text-lg md:text-xl font-light text-center text-white mix-blend-exclusion max-w-2xl mx-auto mb-12 leading-relaxed"
           >
             Delegate tasks to specialized AI assistants via voice or text. <br className="hidden md:block" />
             They'll handle your business operations autonomously.
@@ -97,14 +96,14 @@ export default function Home() {
           >
             <Link 
               href="/signup" 
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base border-2 border-foreground rounded-full hover:bg-foreground hover:text-background transition-all duration-300 font-medium"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base border-2 border-white text-white rounded-full hover:bg-white hover:text-black transition-all duration-300 font-medium mix-blend-exclusion"
             >
               <span>Start Free</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link 
               href="#demo"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base border border-foreground/30 rounded-full hover:border-foreground/60 hover:bg-foreground/5 transition-all duration-300"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base border border-white/30 text-white rounded-full hover:border-white/60 hover:bg-white/10 transition-all duration-300 mix-blend-exclusion"
             >
               Watch Demo
             </Link>
@@ -126,7 +125,7 @@ export default function Home() {
             className="text-center mb-20"
           >
             <h2 className="text-5xl md:text-6xl font-bold mb-6">
-              Meet Your <span className="font-serif italic">Spaces</span>
+              Meet Your <span className="font-serif italic"><u>Spaces</u></span>
             </h2>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
               Each Space is a specialized AI assistant trained to handle specific business functions autonomously
@@ -135,7 +134,7 @@ export default function Home() {
           
           {/* Spaces Grid - Interactive Cards */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {departments.map((dept, i) => (
+            {Spaces.map((dept, i) => (
               <motion.div
                 key={dept.title}
                 initial={{ opacity: 0, y: 30 }}
@@ -199,7 +198,7 @@ export default function Home() {
             className="text-center mt-16"
           >
             <Link
-              href="/departments"
+              href="/Spaces"
               className="inline-flex items-center gap-2 px-8 py-4 text-lg border-2 border-foreground/20 rounded-full font-semibold hover:border-foreground/40 hover:bg-foreground/5 transition-all duration-300"
             >
               View All Spaces
@@ -214,105 +213,74 @@ export default function Home() {
         <FuturisticDemo />
       </div>
 
-      {/* Why Work with feasableSpaces Section */}
-      <section className="relative py-32 px-6 overflow-hidden">
-        {/* Background with Image Slider */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background z-10" />
-        </div>
-        
-        <div className="relative z-20 max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
-            <h2 className="text-4xl md:text-6xl font-bold mb-6">
-              Why Work with <span className="font-serif italic">feasableSpaces</span>
-            </h2>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-              Transform your business with AI-powered departments that work 24/7
-            </p>
-          </motion.div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="p-8 rounded-2xl bg-card/50 backdrop-blur-sm border hover:shadow-xl transition-all"
-            >
-              <div className="w-14 h-14 mb-6 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Zap className="w-7 h-7 text-primary" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Lightning Fast Setup</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Get started in under 2 minutes. No technical knowledge required. Your AI workforce is ready to work immediately.
-              </p>
-            </motion.div>
+      {/* 3D Animated Features Section */}
+      <section className="min-h-screen w-full bg-gradient-to-br from-[#000] to-[#1A2428] text-white flex flex-col items-center justify-center p-8 relative">
+        <div className="w-full max-w-6xl space-y-12 relative z-10">
+          <div className="flex flex-col items-center text-center space-y-8">
+            <Badge variant="secondary" className="backdrop-blur-sm bg-white/10 border border-white/20 text-white hover:bg-white/20 px-4 py-2 rounded-full">
+              ✨ Next Generation Tools
+            </Badge>
             
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="p-8 rounded-2xl bg-card/50 backdrop-blur-sm border hover:shadow-xl transition-all"
-            >
-              <div className="w-14 h-14 mb-6 rounded-xl bg-primary/10 flex items-center justify-center">
-                <MessageSquare className="w-7 h-7 text-primary" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Natural Communication</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Talk to your AI team via voice or text, just like human colleagues. No complex commands or interfaces.
+            <div className="space-y-6 flex items-center justify-center flex-col">
+              <h2 className="text-3xl md:text-6xl font-semibold tracking-tight max-w-3xl">
+                Discover minimalism and power in one place
+              </h2>
+              <p className="text-lg text-neutral-300 max-w-2xl">
+                Designed with aesthetics and performance in mind. Experience ultra-fast processing, advanced security, and intuitive design.
               </p>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="p-8 rounded-2xl bg-card/50 backdrop-blur-sm border hover:shadow-xl transition-all"
-            >
-              <div className="w-14 h-14 mb-6 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Shield className="w-7 h-7 text-primary" />
+              <div className="flex flex-col sm:flex-row gap-4 items-center">
+                <Link href="/signup">
+                  <Button className="text-sm px-8 py-3 rounded-xl bg-white text-black border border-white/10 shadow-none hover:bg-white/90 transition-none">
+                    Get Started
+                  </Button>
+                </Link>
+                <Link href="/about">
+                  <Button className="text-sm px-8 py-3 rounded-xl bg-transparent text-white border border-white/20 shadow-none hover:bg-white/10 transition-none">
+                    Learn More
+                  </Button>
+                </Link>
               </div>
-              <h3 className="text-2xl font-bold mb-4">Enterprise-Grade Security</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Bank-level encryption, SOC 2 compliant, and GDPR ready. Your data stays private and secure, always.
-              </p>
-            </motion.div>
+            </div>
           </div>
 
-          {/* Additional Benefits */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="mt-16 grid md:grid-cols-2 gap-6 max-w-4xl mx-auto"
-          >
-            <div className="flex items-start gap-4 p-6 rounded-xl bg-card/30 backdrop-blur-sm border">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Users className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Scales With Your Team</h4>
-                <p className="text-sm text-muted-foreground">From solo founders to enterprise teams, feasableSpaces grows with you</p>
-              </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto">
+            <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl p-4 md:p-6 h-40 md:h-48 flex flex-col justify-start items-start space-y-2 md:space-y-3">
+              <Cpu size={18} className="text-white/80 md:w-5 md:h-5" />
+              <h3 className="text-sm md:text-base font-medium">Performance</h3>
+              <p className="text-xs md:text-sm text-neutral-400">Ultra-fast data processing in every situation.</p>
             </div>
             
-            <div className="flex items-start gap-4 p-6 rounded-xl bg-card/30 backdrop-blur-sm border">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <BarChart3 className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Real-Time Analytics</h4>
-                <p className="text-sm text-muted-foreground">Track performance, measure ROI, and optimize your AI workforce in real-time</p>
-              </div>
+            <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl p-4 md:p-6 h-40 md:h-48 flex flex-col justify-start items-start space-y-2 md:space-y-3">
+              <ShieldCheck size={18} className="text-white/80 md:w-5 md:h-5" />
+              <h3 className="text-sm md:text-base font-medium">Security</h3>
+              <p className="text-xs md:text-sm text-neutral-400">Advanced protection for complete peace of mind.</p>
             </div>
-          </motion.div>
+            
+            <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl p-4 md:p-6 h-40 md:h-48 flex flex-col justify-start items-start space-y-2 md:space-y-3">
+              <Layers size={18} className="text-white/80 md:w-5 md:h-5" />
+              <h3 className="text-sm md:text-base font-medium">Modularity</h3>
+              <p className="text-xs md:text-sm text-neutral-400">Easy integration with existing architecture.</p>
+            </div>
+            
+            <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl p-4 md:p-6 h-40 md:h-48 flex flex-col justify-start items-start space-y-2 md:space-y-3">
+              <Zap size={18} className="text-white/80 md:w-5 md:h-5" />
+              <h3 className="text-sm md:text-base font-medium">Responsiveness</h3>
+              <p className="text-xs md:text-sm text-neutral-400">Instant response to every command.</p>
+            </div>
+          </div>
+        </div>
+        
+        {/* CSS-only animated background - NO Three.js */}
+        <div className='absolute inset-0 overflow-hidden'>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#000] via-[#0a0a1a] to-[#1A2428]" />
+          <div className="absolute inset-0" style={{
+            backgroundImage: `
+              radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(255, 121, 198, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 40% 20%, rgba(138, 180, 248, 0.1) 0%, transparent 50%)
+            `,
+            animation: 'float 20s ease-in-out infinite'
+          }} />
         </div>
       </section>
 
@@ -349,7 +317,7 @@ export default function Home() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              href="/departments"
+              href="/Spaces"
               className="inline-flex items-center justify-center gap-2 px-10 py-5 text-lg border-2 border-foreground/20 rounded-full font-semibold hover:border-foreground/40 hover:bg-foreground/5 transition-all duration-300"
             >
               Explore Spaces

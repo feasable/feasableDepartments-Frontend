@@ -8,7 +8,7 @@ This document tracks all places where the frontend will connect to the backend A
 
 **Backend Status:** ❌ NOT DEPLOYED  
 **Frontend Mode:** ✅ Works WITHOUT backend (Supabase fallback)  
-**Production URL:** https://spaces.feasable.org
+**Production URL:** https://spaces.luno.org
 
 ---
 
@@ -187,7 +187,7 @@ This Next.js API route proxies all `/api/backend/*` requests to your backend:
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
 
 // Production
-NEXT_PUBLIC_API_BASE_URL=https://api.feasable.org
+NEXT_PUBLIC_API_BASE_URL=https://api.luno.org
 ```
 
 **Features:**
@@ -217,10 +217,10 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
 Add these:
 ```bash
 # Backend API (production) - ⚠️ MUST BE HTTPS
-NEXT_PUBLIC_API_BASE_URL=https://api.feasable.org
+NEXT_PUBLIC_API_BASE_URL=https://api.luno.org
 
 # Agent API (if different)
-NEXT_PUBLIC_AGENT_API_BASE=https://agent.feasable.org
+NEXT_PUBLIC_AGENT_API_BASE=https://agent.luno.org
 
 # Supabase (same as local)
 NEXT_PUBLIC_SUPABASE_URL=https://zoqqrvmfumzfnhdrgjyk.supabase.co
@@ -243,7 +243,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
 - [x] Error messages user-friendly
 
 ### When Backend is Ready
-- [ ] Deploy backend to production (https://api.feasable.org)
+- [ ] Deploy backend to production (https://api.luno.org)
 - [ ] Update Netlify env vars with production backend URL
 - [ ] Test `/v1/me` endpoint returns user data
 - [ ] Test `/v1/businesses/bootstrap` creates business

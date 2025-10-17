@@ -54,7 +54,7 @@ ORDER BY ordinal_position;
 3. Find or add these variables:
 
 ```bash
-NEXT_PUBLIC_API_BASE_URL=https://api.feasable.org
+NEXT_PUBLIC_API_BASE_URL=https://api.luno.org
 NEXT_PUBLIC_SUPABASE_URL=https://zoqqrvmfumzfnhdrgjyk.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
 ```
@@ -83,7 +83,7 @@ Wait for Netlify deploy to finish (~2 minutes).
 ### Test 1: Fresh Sign Up Flow
 
 #### 1.1 Navigate to Site
-- Open: https://spaces.feasable.org
+- Open: https://spaces.luno.org
 - **Open DevTools** (F12) → Go to Console tab
 - Keep it open to see all our debugging logs
 
@@ -108,7 +108,7 @@ You should see:
 **Visual Check:**
 - ✅ Modal is BRIGHT WHITE (not dark gray)
 - ✅ Has clear visible borders
-- ✅ Shows "Welcome to FeasableSpaces! 🎉"
+- ✅ Shows "Welcome to lunoSpaces! 🎉"
 - ✅ Has "Get Started" button
 
 **Screenshot this if it looks wrong!**
@@ -211,7 +211,7 @@ Watch console:
 #### 3.2 Direct Navigation
 - Close browser tab
 - Open new tab
-- Go to: https://spaces.feasable.org/dashboard
+- Go to: https://spaces.luno.org/dashboard
 - ✅ Loads directly to dashboard
 - ✅ No login prompt
 
@@ -225,7 +225,7 @@ Watch console:
 - ✅ Redirects to homepage or login
 
 #### 4.2 Login Again
-- Go to: https://spaces.feasable.org/login
+- Go to: https://spaces.luno.org/login
 - Email: `test+001@example.com`
 - Password: `test123456`
 - Click "Sign In"
@@ -352,7 +352,7 @@ Mixed Content: The page at 'https://...' was loaded over HTTPS, but requested an
 
 **Fix:**
 1. Netlify Dashboard → Environment Variables
-2. Change `http://localhost:8080` to `https://api.feasable.org`
+2. Change `http://localhost:8080` to `https://api.luno.org`
 3. Trigger new deploy
 
 ---
@@ -418,7 +418,7 @@ Mixed Content: The page at 'https://...' was loaded over HTTPS, but requested an
 If recording for demonstration:
 
 1. **Intro** (0:00-0:10)
-   - "Testing complete signup flow on FeasableSpaces"
+   - "Testing complete signup flow on lunoSpaces"
    
 2. **Database Setup** (0:10-0:30)
    - Show Supabase SQL editor
