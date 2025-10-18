@@ -74,8 +74,8 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-5xl md:text-7xl font-light tracking-tight mix-blend-exclusion text-white mb-6 leading-tight whitespace-normal"
           >
-            Agentic Spaces That <br className="hidden md:block" />
-            <span className="font-serif italic">Work Like Humans</span>
+            Astronauts for your Buiness <br className="hidden md:block" />
+            <span className="font-serif italic">Agentic Spaces</span>
           </motion.h1>
           
           <motion.p

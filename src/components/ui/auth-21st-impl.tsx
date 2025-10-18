@@ -5,7 +5,7 @@
 import { cn } from "@/lib/utils";
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, useMemo, useCallback, createContext, Children } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { ArrowRight, Mail, Gem, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader } from "lucide-react";
+import { ArrowRight, Mail, Gem, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, Linkedin } from "lucide-react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import type { ReactNode } from "react"
 import type { GlobalOptions as ConfettiGlobalOptions, CreateTypes as ConfettiInstance, Options as ConfettiOptions } from "canvas-confetti"
@@ -170,7 +170,7 @@ export const AuthComponent = ({ logo = <DefaultLogo />, brandName = "lunoSpaces"
   const confettiRef = useRef<ConfettiRef>(null);
   const supabase = createClient();
 
-  const isEmailValid = /\\S+@\\S+\\.\\S+/.test(email);
+  const isEmailValid = /\S+@\S+\.\S+/.test(email);
   const isPasswordValid = password.length >= 6;
   const isConfirmPasswordValid = confirmPassword.length >= 6;
   
@@ -209,7 +209,17 @@ export const AuthComponent = ({ logo = <DefaultLogo />, brandName = "lunoSpaces"
             }
         });
 
-        if (error) throw error;
+        if (error) {
+          const msg = (error.message || '').toLowerCase();
+          if (msg.includes('already registered') || msg.includes('user already')) {
+            // Existing user: go back to password entry
+            setAuthStep('password');
+            setModalStatus('closed');
+            setLoading(false);
+            return;
+          }
+          throw error;
+        }
 
         // Simulate loading steps animation
         const loadingStepsCount = modalSteps.length - 1;
@@ -266,11 +276,41 @@ export const AuthComponent = ({ logo = <DefaultLogo />, brandName = "lunoSpaces"
     }
   };
 
+  const handlePasswordSubmit = async () => {
+    if (!isPasswordValid || loading) return;
+    try {
+      setLoading(true);
+      // Try sign-in for existing users
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        const msg = (error.message || '').toLowerCase();
+        // If credentials invalid, assume account doesn't exist yet and proceed to signup confirmation
+        if (msg.includes('invalid login') || msg.includes('invalid credentials')) {
+          setAuthStep('confirmPassword');
+          setLoading(false);
+          return;
+        }
+        // Other errors surface in modal
+        setModalErrorMessage(error.message || 'Sign-in failed');
+        setModalStatus('error');
+        setLoading(false);
+        return;
+      }
+      // Signed in -> redirect
+      if (onAuthSuccess) onAuthSuccess();
+    } catch (err: any) {
+      setLoading(false);
+      setModalErrorMessage(err.message || 'Unexpected error while signing in');
+      setModalStatus('error');
+    }
+  };
+
   const handleProgressStep = () => {
     if (authStep === "email") {
         if (isEmailValid) setAuthStep("password");
     } else if (authStep === "password") {
-        if (isPasswordValid) setAuthStep("confirmPassword");
+        // Attempt sign-in first; if it fails with invalid credentials we'll switch to confirm step.
+        void handlePasswordSubmit();
     }
   };
 
@@ -394,7 +434,7 @@ useEffect(() => {
                                                 {isPasswordValid ? <button type="button" aria-label="Toggle password visibility" onClick={() => setShowPassword(!showPassword)} className="text-foreground/80 hover:text-foreground transition-colors p-2 rounded-full">{showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}</button> : <Lock className="h-5 w-5 text-foreground/80 flex-shrink-0" />}
                                             </div>
                                             <input ref={passwordInputRef} type={showPassword ? "text" : "password"} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={handleKeyDown} className="relative z-10 h-full w-0 flex-grow bg-transparent text-foreground placeholder:text-foreground/60 focus:outline-none" />
-                                            <div className={cn( "relative z-10 flex-shrink-0 overflow-hidden transition-all duration-300 ease-in-out", isPasswordValid ? "w-10 pr-1" : "w-0" )}><GlassButton type="button" onClick={handleProgressStep} size="icon" aria-label="Submit password" contentClassName="text-foreground/80 hover:text-foreground"><ArrowRight className="w-5 h-5" /></GlassButton></div>
+                                            <div className={cn( "relative z-10 flex-shrink-0 overflow-hidden transition-all duration-300 ease-in-out", isPasswordValid ? "w-10 pr-1" : "w-0" )}><GlassButton type="button" onClick={handlePasswordSubmit} size="icon" aria-label="Submit password" contentClassName="text-foreground/80 hover:text-foreground"><ArrowRight className="w-5 h-5" /></GlassButton></div>
                                         </div></div>
                                     </div>
                                     <BlurFade inView delay={0.2}><button type="button" onClick={handleGoBack} className="mt-4 flex items-center gap-2 text-sm text-foreground/70 hover:text-foreground transition-colors"><ArrowLeft className="w-4 h-4" /> Go back</button></BlurFade>
@@ -423,7 +463,27 @@ useEffect(() => {
                 </form>
             </fieldset>
         </div>
-        
+
+        {/* Bottom social icons for auth page only */}
+        <div className="fixed bottom-4 inset-x-0 z-10 flex items-center justify-center gap-6">
+          <a
+            href="https://linkedin.com/company/luno"
+            target="_blank"
+            rel="noreferrer"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="LinkedIn"
+          >
+            <Linkedin className="w-5 h-5" />
+          </a>
+          <a
+            href="mailto:hello@luno.org"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Email"
+          >
+            <Mail className="w-5 h-5" />
+          </a>
+        </div>
+
         <style>{`
             input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display: none !important; } 
             input[type="password"]::-webkit-credentials-auto-fill-button, input[type="password"]::-webkit-strong-password-auto-fill-button { display: none !important; } 

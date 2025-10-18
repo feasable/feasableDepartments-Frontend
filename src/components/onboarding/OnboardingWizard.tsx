@@ -43,6 +43,53 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
     }
   }
 
+  const handleSkipForNow = async () => {
+    try {
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      const user = session?.user
+      if (!user) {
+        toast.error('Please sign in first')
+        return
+      }
+
+      // Reuse existing business if present
+      const { data: existing, error: findErr } = await supabase
+        .from('businesses')
+        .select('id')
+        .eq('owner_id', user.id)
+        .limit(1)
+
+      if (findErr) {
+        console.error('[Onboarding] find business error', findErr)
+      }
+
+      let bizId = existing && existing.length > 0 ? existing[0].id : null
+
+      if (!bizId) {
+        // Create a minimal workspace
+        const { data: newBiz, error: createErr } = await supabase
+          .from('businesses')
+          .insert({ name: 'Personal Workspace', owner_id: user.id })
+          .select('id')
+          .single()
+        if (createErr) {
+          console.error('[Onboarding] create business error', createErr)
+          toast.error('Could not create a workspace')
+          return
+        }
+        bizId = newBiz.id
+      }
+
+      localStorage.setItem('businessId', bizId as string)
+      localStorage.setItem('companyProfileCompleted', 'false')
+      onClose()
+    } catch (e) {
+      console.error('[Onboarding] Skip error', e)
+      toast.error('Failed to skip setup')
+    }
+  }
+
   const handleBack = () => {
     const stepOrder: Step[] = ['welcome', 'personal', 'company', 'details', 'success']
     const prevIndex = stepOrder.indexOf(currentStep) - 1
@@ -170,9 +217,14 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
             <p className="text-lg text-muted-foreground max-w-md mx-auto">
               Let's get you set up in just a few steps ~ This will only take a minute.
             </p>
-            <Button onClick={handleNext} size="lg" className="mt-8">
-              Start <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
+            <div className="flex items-center justify-center gap-3 mt-8">
+              <Button onClick={handleNext} size="lg">
+                Start <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+              <Button variant="outline" onClick={handleSkipForNow} size="lg">
+                Skip for now
+              </Button>
+            </div>
           </motion.div>
         )
 

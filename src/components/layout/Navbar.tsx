@@ -29,33 +29,26 @@ export function Navbar() {
 
   useEffect(() => {
     const supabase = createClient()
+    const computeName = (user: any) => {
+      const full = user?.user_metadata?.full_name || user?.user_metadata?.name
+      if (full && typeof full === 'string') return full
+      const first = user?.user_metadata?.first_name
+      const last = user?.user_metadata?.last_name
+      const combined = [first, last].filter(Boolean).join(' ').trim()
+      return combined || user?.email || null
+    }
+
     supabase.auth.getSession().then(({ data }) => {
       const user = data.session?.user
       setUserEmail(user?.email ?? null)
-      if (user) {
-        const firstName = user.user_metadata?.first_name || user.user_metadata?.full_name?.split(' ')[0]
-        const lastName = user.user_metadata?.last_name || user.user_metadata?.full_name?.split(' ')[1]
-        if (firstName && lastName) {
-          setUserDisplayName(`${firstName} ${lastName.charAt(0)}.`)
-        } else {
-          setUserDisplayName(user.email ?? null)
-        }
-      }
+      if (user) setUserDisplayName(computeName(user))
     })
+
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       const user = session?.user
       setUserEmail(user?.email ?? null)
-      if (user) {
-        const firstName = user.user_metadata?.first_name || user.user_metadata?.full_name?.split(' ')[0]
-        const lastName = user.user_metadata?.last_name || user.user_metadata?.full_name?.split(' ')[1]
-        if (firstName && lastName) {
-          setUserDisplayName(`${firstName} ${lastName.charAt(0)}.`)
-        } else {
-          setUserDisplayName(user.email ?? null)
-        }
-      } else {
-        setUserDisplayName(null)
-      }
+      if (user) setUserDisplayName(computeName(user))
+      else setUserDisplayName(null)
     })
     return () => {
       sub.subscription.unsubscribe()

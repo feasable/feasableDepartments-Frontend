@@ -19,7 +19,6 @@ import {
   ArrowRight,
   Sparkles
 } from 'lucide-react'
-import { Navbar } from '@/components/layout/Navbar'
 
 interface Task {
   id: string
@@ -61,10 +60,52 @@ export default function DashboardPage() {
     console.log('🔍 [Dashboard] Checking authentication...')
     const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
-    
+
     if (!session) {
-      console.log('❌ [Dashboard] No session found, redirecting to login')
-      router.push('/login')
+      console.log('❌ [Dashboard] No session yet, waiting for auth state...')
+      let resolved = false
+      const timeout = setTimeout(() => {
+        if (!resolved) {
+          console.log('⏱️ [Dashboard] Auth wait timed out, redirecting to /auth')
+          router.push('/auth')
+        }
+      }, 1500)
+
+      const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+        if (newSession?.user) {
+          resolved = true
+          clearTimeout(timeout)
+          console.log('✅ [Dashboard] Session arrived via onAuthStateChange')
+          setUser(newSession.user)
+          proceed()
+        }
+      })
+
+      const proceed = async () => {
+        // Ensure business context once session exists
+        let id = getBusinessId()
+        console.log('🔍 [Dashboard] Business ID from localStorage:', id)
+        if (!id) {
+          try {
+            id = await ensureUserBusiness()
+            console.log('✅ [Dashboard] Business found:', id)
+            setBusinessId(id)
+            fetchTasks(id)
+          } catch (error: any) {
+            console.log('⚠️ [Dashboard] ensureUserBusiness error:', error.message)
+            if (error.message === 'NO_WORKSPACE') {
+              setShowOnboarding(true)
+              setLoading(false)
+            } else {
+              router.push('/auth')
+            }
+          }
+        } else {
+          setBusinessId(id)
+          fetchTasks(id)
+        }
+        sub.subscription.unsubscribe()
+      }
       return
     }
     
@@ -83,14 +124,16 @@ export default function DashboardPage() {
         setBusinessId(id)
         fetchTasks(id)
       } catch (error: any) {
-        console.log('⚠️ [Dashboard] ensureUserBusiness error:', error.message)
         if (error.message === 'NO_WORKSPACE') {
           console.log('📝 [Dashboard] No workspace found, showing onboarding...')
           setShowOnboarding(true)
           setLoading(false)
+        } else if (error.message === 'UNAUTHENTICATED') {
+          console.error('❌ [Dashboard] Unauthenticated, redirecting to /auth')
+          router.push('/auth')
         } else {
-          console.error('❌ [Dashboard] Unexpected error, redirecting to login')
-          router.push('/login')
+          console.error('❌ [Dashboard] Unexpected error, redirecting to /auth')
+          router.push('/auth')
         }
         return
       }
@@ -145,8 +188,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      <Navbar />
-      
       <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Welcome Section */}

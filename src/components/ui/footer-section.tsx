@@ -3,7 +3,7 @@
 import React from 'react'
 import type { ComponentProps, ReactNode } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { Facebook, Instagram, Youtube, Linkedin, Twitter, Github, Mail } from 'lucide-react'
+import { Facebook, Instagram, Youtube, Linkedin, Mail } from 'lucide-react'
 
 interface FooterLink {
   title: string
@@ -56,9 +56,7 @@ const footerLinks: FooterSection[] = [
 ]
 
 const socialLinks = [
-  { title: 'Twitter', href: 'https://twitter.com/luno', icon: Twitter },
   { title: 'LinkedIn', href: 'https://linkedin.com/company/luno', icon: Linkedin },
-  { title: 'GitHub', href: 'https://github.com/luno', icon: Github },
   { title: 'Email', href: 'mailto:hello@luno.org', icon: Mail },
 ]
 

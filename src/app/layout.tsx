@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Crimson_Pro } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'sonner'
-import { Navbar } from '@/components/layout/Navbar'
-import { Footer } from '@/components/ui/footer-section'
+import { Chrome } from '@/components/layout/Chrome'
 import ScrollToTop from '@/components/ScrollToTop'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 
@@ -79,11 +78,11 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-background text-foreground flex flex-col min-h-screen">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <ScrollToTop />
-          <Navbar />
+          <Chrome which="navbar" />
           <main className="flex-1">
             {children}
           </main>
-          <Footer />
+          <Chrome which="footer" />
           <Toaster position="bottom-right" richColors />
         </ThemeProvider>
       </body>
