@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { GlassButton } from '@/components/ui/glass-button'
@@ -63,11 +64,16 @@ export function Navbar() {
       >
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
-            {/* Logo Text Only */}
-            <Link href="/" className="flex items-center group">
-              <span className="text-xl">
-                <span className="font-serif font-light italic" style={{fontFamily: 'cursive'}}>luno</span><span className="font-serif font-bold">Spaces</span>
-              </span>
+            {/* Logo Image */}
+            <Link href="/" className="flex items-center group py-2">
+              <Image
+                src="/images/lunotransparent.png"
+                alt="lunoSpaces"
+                width={120}
+                height={32}
+                priority
+                className="h-8 w-auto object-contain"
+              />
             </Link>
 
             {/* Desktop Menu - Each in Glass Bubble */}
