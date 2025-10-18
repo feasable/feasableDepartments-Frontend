@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { GlassButton } from '@/components/ui/glass-button'
 import { createClient } from '@/lib/supabase/client'
@@ -15,6 +16,8 @@ export function Navbar() {
   const [mobileMenu, setMobileMenu] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [userDisplayName, setUserDisplayName] = useState<string | null>(null)
+  const pathname = usePathname()
+  const hideTopSwitcher = !!pathname && (pathname.startsWith('/dashboard') || pathname.startsWith('/tasks') || pathname.startsWith('/settings'))
 
   useEffect(() => {
     const handle = () => {
@@ -94,10 +97,12 @@ export function Navbar() {
               </GlassButton>
             </div>
 
-            {/* Workspace Switcher */}
-            <div className="hidden md:flex items-center mx-3">
-              <WorkspaceSwitcher />
-            </div>
+            {/* Workspace Switcher (hidden on app shell pages; lives in sidebar there) */}
+            {!hideTopSwitcher && (
+              <div className="hidden md:flex items-center mx-3">
+                <WorkspaceSwitcher />
+              </div>
+            )}
 
             {/* CTA / User */}
             <div className="hidden md:flex items-center gap-3">

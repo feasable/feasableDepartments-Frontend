@@ -1,6 +1,12 @@
+  useEffect(() => {
+    try {
+      const d = localStorage.getItem('currentDepartment')
+      if (d) setDepartment(d)
+    } catch {}
+  }, [])
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getBusinessId } from '@/lib/tenant'
 import { analytics } from '@/lib/analytics'
@@ -40,6 +46,7 @@ export default function NewTaskPage() {
       analytics.track('task_created', { id: data.id, department })
       router.push('/dashboard')
     } catch (e) {
+      analytics.track('task_create_error')
       // noop error toast for brevity
       setSaving(false)
     }
