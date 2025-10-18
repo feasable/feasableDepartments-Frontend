@@ -6,11 +6,12 @@ import { cn } from "@/lib/utils";
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, useMemo, useCallback, createContext, Children } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { ArrowRight, Mail, Gem, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader } from "lucide-react";
-import { AnimatePresence, motion, useInView, Variants, Transition } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import type { ReactNode } from "react"
 import type { GlobalOptions as ConfettiGlobalOptions, CreateTypes as ConfettiInstance, Options as ConfettiOptions } from "canvas-confetti"
 import confetti from "canvas-confetti"
 import { createClient } from "@/lib/supabase/client"
+import type { Variants, Transition } from "framer-motion";
 
 type Api = { fire: (options?: ConfettiOptions) => void }
 export type ConfettiRef = Api | null
@@ -74,9 +75,9 @@ export function TextLoop({ children, className, interval = 2, transition = { dur
 }
 
 interface BlurFadeProps { children: React.ReactNode; className?: string; variant?: { hidden: { y: number }; visible: { y: number } }; duration?: number; delay?: number; yOffset?: number; inView?: boolean; inViewMargin?: string; blur?: string; }
-function BlurFade({ children, className, variant, duration = 0.4, delay = 0, yOffset = 6, inView = true, inViewMargin = "-50px", blur = "6px" }: BlurFadeProps) {
+function BlurFade({ children, className, variant, duration = 0.4, delay = 0, yOffset = 6, inView = true, inViewMargin = "-50px 0px -50px 0px", blur = "6px" }: BlurFadeProps) {
   const ref = useRef(null);
-  const inViewResult = useInView(ref, { once: true, margin: inViewMargin });
+  const inViewResult = useInView(ref, { once: true, margin: inViewMargin as any });
   const isInView = !inView || inViewResult;
   const defaultVariants: Variants = {
     hidden: { y: yOffset, opacity: 0, filter: `blur(${blur})`  },
