@@ -8,6 +8,7 @@ import { Menu, X } from 'lucide-react'
 import { GlassButton } from '@/components/ui/glass-button'
 import { createClient } from '@/lib/supabase/client'
 import { WorkspaceSwitcher } from '@/components/layout/WorkspaceSwitcher'
+import { UserMenu } from '@/components/layout/UserMenu'
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -61,7 +62,7 @@ export function Navbar() {
     <>
       <motion.nav
         animate={{ y: 0 }}
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-background/60 backdrop-blur-xl border-b border-border/30"
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 backdrop-blur-xl bg-background/30 supports-[backdrop-filter]:bg-background/30 border-transparent"
       >
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
@@ -98,18 +99,10 @@ export function Navbar() {
               <WorkspaceSwitcher />
             </div>
 
-            {/* CTA Buttons in Glass */}
+            {/* CTA / User */}
             <div className="hidden md:flex items-center gap-3">
               {userEmail ? (
-                <>
-                  <span className="text-xs text-muted-foreground hidden lg:inline-block">{userDisplayName || userEmail}</span>
-                  <GlassButton asChild size="sm">
-                    <Link href="/dashboard">Dashboard</Link>
-                  </GlassButton>
-                  <GlassButton size="sm" onClick={async () => { await createClient().auth.signOut(); window.location.href = '/' }}>
-                    Sign Out
-                  </GlassButton>
-                </>
+                <UserMenu displayName={userDisplayName} email={userEmail} />
               ) : (
                 <>
                   <GlassButton asChild size="sm">

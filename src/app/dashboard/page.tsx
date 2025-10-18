@@ -10,7 +10,9 @@ import { ensureUserBusiness } from '@/lib/auth-helpers'
 import { toast } from 'sonner'
 import { OnboardingWizard } from '@/components/onboarding/OnboardingWizard'
 import { checkCompleteness } from '@/lib/profile'
+import { analytics } from '@/lib/analytics'
 import { ProfileCompletionBanner } from '@/components/dashboard/ProfileCompletionBanner'
+import { DashboardShell } from '@/components/layout/DashboardShell'
 import { motion } from 'framer-motion'
 import { 
   CheckCircle2, 
@@ -56,6 +58,7 @@ export default function DashboardPage() {
   const [missingInfo, setMissingInfo] = useState<{ profileFields: string[]; businessFields: string[] }>({ profileFields: [], businessFields: [] })
 
   useEffect(() => {
+    analytics.track('dashboard_viewed')
     checkAuth()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -185,12 +188,39 @@ export default function DashboardPage() {
       setTasks(data.tasks || [])
       updateStats(data.tasks || [])
     } catch (error) {
-      console.error('Failed to fetch tasks:', error)
-      // Don't show error toast if it's just empty tasks
+      // Fallback to Supabase direct query
+      try {
+        const supabase = createClient()
+        const { data } = await supabase
+          .from('tasks')
+          .select('id,title,description,status,priority,department,created_at')
+          .eq('business_id', id)
+          .order('created_at', { ascending: false })
+          .limit(20)
+        const list = (data as Task[]) || []
+        setTasks(list)
+        updateStats(list)
+      } catch (e) {
+        console.error('Failed to fetch tasks (fallback):', e)
+      }
     } finally {
       setLoading(false)
     }
   }
+
+  // Realtime subscription to task changes (fallback: none if RLS blocks or channel unavailable)
+  useEffect(() => {
+    const supabase = createClient()
+    if (!businessId) return
+    const channel = supabase
+      .channel('tasks-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks', filter: `business_id=eq.${businessId}` }, (_payload) => {
+        // Refetch latest tasks on change
+        fetchTasks(businessId)
+      })
+      .subscribe()
+    return () => { channel.unsubscribe() }
+  }, [businessId])
 
   const updateStats = (taskList: Task[]) => {
     setStats({
@@ -222,9 +252,8 @@ export default function DashboardPage() {
   }
 
   return (
-    <>
-      <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <DashboardShell>
+      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-4">
           {showBanner && (
             <ProfileCompletionBanner
               missing={missingInfo}
@@ -331,7 +360,7 @@ export default function DashboardPage() {
             </Link>
 
             <Link
-              href="/Spaces/marketing"
+              href="/tasks/new"
               className="group bg-card rounded-2xl p-6 border hover:border-primary hover:shadow-lg transition-all"
             >
               <div className="flex items-center justify-between mb-4">
@@ -420,7 +449,6 @@ export default function DashboardPage() {
             )}
           </motion.div>
         </div>
-      </div>
 
       {/* Onboarding Wizard */}
       {showOnboarding && user && (
@@ -432,6 +460,6 @@ export default function DashboardPage() {
           }}
         />
       )}
-    </>
+    </DashboardShell>
   )
 }

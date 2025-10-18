@@ -2,6 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Moved from Auth component to prevent hydration mismatches */
+@keyframes float1 { 0% { transform: translate(0, 0); } 50% { transform: translate(-10px, 10px); } 100% { transform: translate(0, 0); } }
+@keyframes float2 { 0% { transform: translate(0, 0); } 50% { transform: translate(10px, -10px); } 100% { transform: translate(0, 0); } }
+
+/* Input autofill and password reveal normalization */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear { display: none !important; }
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-strong-password-auto-fill-button { display: none !important; }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+  background-color: transparent !important;
+  background-clip: content-box !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  color: var(--foreground) !important;
+  caret-color: var(--foreground) !important;
+}
+input:autofill {
+  background-color: transparent !important;
+  background-clip: content-box !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+  color: var(--foreground) !important;
+}
+input:-internal-autofill-selected {
+  background-color: transparent !important;
+  background-image: none !important;
+  color: var(--foreground) !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+}
+input:-webkit-autofill::first-line {
+  color: var(--foreground) !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+}
+
 @keyframes float {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -30px) scale(1.1); }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getBusinessId, setBusinessId } from '@/lib/tenant'
+import { analytics } from '@/lib/analytics'
 
 interface Biz { id: string; name: string }
 
@@ -38,6 +39,7 @@ export function WorkspaceSwitcher() {
           const id = e.target.value
           setCurrent(id)
           setBusinessId(id)
+          analytics.track('workspace_switched', { businessId: id })
           window.location.reload()
         }}
       >

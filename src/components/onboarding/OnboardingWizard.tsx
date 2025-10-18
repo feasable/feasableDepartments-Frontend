@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { analytics } from '@/lib/analytics'
 
 interface OnboardingWizardProps {
   isOpen: boolean
@@ -45,6 +46,7 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
 
   const handleSkipForNow = async () => {
     try {
+      analytics.track('onboarding_skipped')
       const supabase = createClient()
       const { data: { session } } = await supabase.auth.getSession()
       const user = session?.user
@@ -96,6 +98,7 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
     } catch (e) {
       console.error('[Onboarding] Skip error', e)
       toast.error('Failed to skip setup')
+      analytics.track('onboarding_error', { action: 'skip', message: (e as any)?.message })
     }
   }
 
@@ -121,6 +124,7 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
 
     try {
       console.log('🔍 [Onboarding] Getting session...')
+      analytics.track('onboarding_submit')
       const { data: { session }, error: sessionError } = await supabase.auth.getSession()
       
       if (sessionError) {
@@ -150,6 +154,20 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
         throw userError
       }
       console.log('✅ [Onboarding] User metadata updated')
+
+      // Keep public.profiles in sync (used by completeness checks)
+      try {
+        await supabase
+          .from('profiles')
+          .upsert({
+            id: user.id,
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            full_name: `${formData.firstName} ${formData.lastName}`,
+          })
+      } catch (pErr) {
+        console.warn('[Onboarding] profiles upsert warning:', pErr)
+      }
 
       if (businessId) {
         // Update existing business
@@ -209,10 +227,12 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
 
       localStorage.setItem('companyProfileCompleted', 'true')
       console.log('🎉 [Onboarding] Complete! Showing success screen...')
+      analytics.track('onboarding_complete')
       setCurrentStep('success')
     } catch (error: any) {
       console.error('Onboarding error:', error)
       toast.error(error.message || 'Failed to save profile')
+      analytics.track('onboarding_error', { action: 'submit', message: error?.message })
       setLoading(false)
     }
   }

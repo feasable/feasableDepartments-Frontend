@@ -46,8 +46,15 @@ export interface GlassButtonProps
 
 const GlassButton = React.forwardRef<HTMLButtonElement, GlassButtonProps>(
   ({ className, children, size, contentClassName, asChild = false, ...props }, ref) => {
+    const handleWrapperClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+      // If user clicks wrapper padding, forward the click to the inner actionable element
+      const target = e.currentTarget.querySelector('a,button') as HTMLElement | null
+      if (target && e.target === e.currentTarget) {
+        target.click()
+      }
+    }
     return (
-      <div className={cn("glass-button-wrap cursor-pointer rounded-full", className)}>
+      <div className={cn("glass-button-wrap cursor-pointer rounded-full", className)} onClick={handleWrapperClick}>
         {asChild ? (
           <Slot className={cn("glass-button", glassButtonVariants({ size }))} {...(props as any)}>
             <span className={cn(glassButtonTextVariants({ size }), contentClassName)}>{children}</span>

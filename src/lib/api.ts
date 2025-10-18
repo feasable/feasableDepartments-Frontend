@@ -1,11 +1,18 @@
 export async function backend<T = any>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`/api/backend${path}`, {
-    ...init,
-    headers: {
-      'content-type': 'application/json',
-      ...(init?.headers || {}),
-    },
-  })
+  // Try to attach Supabase access token on client
+  let headers: HeadersInit = { 'content-type': 'application/json', ...(init?.headers || {}) }
+  if (typeof window !== 'undefined') {
+    try {
+      const { createClient } = await import('@/lib/supabase/client')
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+      if (token && !(headers as any)['Authorization']) {
+        headers = { ...headers, Authorization: `Bearer ${token}` }
+      }
+    } catch {}
+  }
+  const res = await fetch(`/api/backend${path}`, { ...init, headers })
   if (!res.ok) {
     if (typeof window !== 'undefined' && res.status === 401) {
       // Lazy import to avoid server-side bundling
