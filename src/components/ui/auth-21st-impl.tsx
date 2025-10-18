@@ -155,9 +155,10 @@ interface AuthComponentProps {
   logo?: React.ReactNode;
   brandName?: string;
   onAuthSuccess?: () => void;
+  backgroundImageUrl?: string;
 }
 
-export const AuthComponent = ({ logo = <DefaultLogo />, brandName = "lunoSpaces", onAuthSuccess }: AuthComponentProps) => {
+export const AuthComponent = ({ logo = <DefaultLogo />, brandName = "lunoSpaces", onAuthSuccess, backgroundImageUrl }: AuthComponentProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -384,7 +385,17 @@ useEffect(() => {
         <Modal />
 
         <div className={cn("flex w-full flex-1 h-full items-center justify-center bg-card", "relative overflow-hidden")}>
-            <div className="absolute inset-0 z-0"><GradientBackground /></div>
+            {(() => {
+              const bgStyle = backgroundImageUrl
+                ? { backgroundImage: `url('${backgroundImageUrl}')`, backgroundSize: 'cover', backgroundPosition: 'center' as const }
+                : undefined;
+              return (
+                <div className="absolute inset-0 z-0" style={bgStyle}>
+                  {!backgroundImageUrl && <GradientBackground />}
+                  {backgroundImageUrl && <div className="absolute inset-0 bg-black/40" />}
+                </div>
+              )
+            })()}
             <fieldset disabled={modalStatus !== "closed"} className="relative z-10 flex flex-col items-center gap-8 w-[280px] mx-auto p-4">
                 <AnimatePresence mode="wait">
                     {authStep === "email" && <motion.div key="email-content" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: "easeOut" }} className="w-full flex flex-col items-center gap-4">

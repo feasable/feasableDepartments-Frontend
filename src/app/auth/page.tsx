@@ -28,6 +28,7 @@ export default function AuthPage() {
     <AuthComponent 
       logo={<CustomLogo />}
       brandName="lunoSpaces"
+      backgroundImageUrl="https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg"
       onAuthSuccess={handleAuthSuccess}
     />
   );
