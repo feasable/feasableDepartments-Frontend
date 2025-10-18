@@ -1,9 +1,3 @@
-  useEffect(() => {
-    try {
-      const d = localStorage.getItem('currentDepartment')
-      if (d) setDepartment(d)
-    } catch {}
-  }, [])
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -18,6 +12,13 @@ export default function NewTaskPage() {
   const [description, setDescription] = useState('')
   const [department, setDepartment] = useState('marketing')
   const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    try {
+      const d = localStorage.getItem('currentDepartment')
+      if (d) setDepartment(d)
+    } catch {}
+  }, [])
 
   const save = async () => {
     if (!title.trim()) return

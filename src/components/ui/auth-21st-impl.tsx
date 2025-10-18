@@ -64,6 +64,28 @@ export function TextLoop({ children, className, interval = 2, transition = { dur
     animate: { y: 0, opacity: 1 },
     exit: { y: -20, opacity: 0 },
   };
+
+  const handleEmailMagic = async () => {
+    if (loading || !isEmailValid) return;
+    setLoading(true);
+    try {
+      analytics.track('auth_start_magic_link')
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      })
+      if (error) throw error
+      // Show success animation then user will complete via email
+      setModalStatus('loading')
+      setTimeout(() => { setModalStatus('success') }, 1500)
+    } catch (error: any) {
+      setModalErrorMessage(error.message || 'Failed to send magic link.')
+      setModalStatus('error')
+      analytics.track('auth_error', { provider: 'magic_link', message: error?.message })
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <div className={cn("relative inline-block whitespace-nowrap", className)}>
       <AnimatePresence mode="popLayout" initial={false}>
@@ -417,6 +439,20 @@ useEffect(() => {
                             <GlassButton onClick={handleGitHubSignIn} disabled={loading} contentClassName="flex items-center justify-center gap-2" size="sm"><GitHubIcon /><span className="font-semibold text-foreground">GitHub</span></GlassButton>
                         </div></BlurFade>
                         <BlurFade delay={0.25 * 4} className="w-[300px]"><div className="flex items-center w-full gap-2 py-2"><hr className="w-full border-border"/><span className="text-xs font-semibold text-muted-foreground">OR</span><hr className="w-full border-border"/></div></BlurFade>
+                        {/* Always-visible email fallback (magic link) */}
+                        <BlurFade delay={0.25 * 5} className="w-[300px]">
+                          <div className="space-y-2">
+                            <label className="text-xs text-muted-foreground font-semibold">Email</label>
+                            <input
+                              type="email"
+                              placeholder="you@example.com"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                            />
+                            <GlassButton onClick={handleEmailMagic} disabled={loading || !isEmailValid} size="sm" className="w-full">Continue with Email</GlassButton>
+                          </div>
+                        </BlurFade>
                     </motion.div>}
                     {authStep === "password" && <motion.div key="password-title" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: "easeOut" }} className="w-full flex flex-col items-center text-center gap-4">
                         <BlurFade delay={0} className="w-full"><div className="text-center"><p className="font-serif font-light text-4xl sm:text-5xl tracking-tight text-foreground whitespace-nowrap">Enter your password</p></div></BlurFade>

@@ -126,10 +126,10 @@ export default function DashboardPage() {
 
       const timeout = setTimeout(() => {
         if (!resolved) {
-          console.log('⏱️ [Dashboard] Auth wait timed out (4s), redirecting to /auth')
+          console.log('⏱️ [Dashboard] Auth wait timed out (10s), redirecting to /auth')
           router.push('/auth')
         }
-      }, 4000)
+      }, 10000)
       return
     }
     
@@ -396,10 +396,10 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold">Recent Activity</h2>
               <Link 
-                href="/Spaces" 
+                href="/tasks" 
                 className="text-sm text-primary hover:underline flex items-center gap-2"
               >
-                View all <ArrowRight className="w-4 h-4" />
+                View all tasks <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
@@ -430,7 +430,7 @@ export default function DashboardPage() {
                     className="flex items-center justify-between p-4 rounded-xl hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex-1">
-                      <h4 className="font-medium mb-1">{task.title}</h4>
+                      <h4 className="font-medium mb-1"><Link className="hover:underline" href={`/tasks/${task.id}`}>{task.title}</Link></h4>
                       <p className="text-sm text-muted-foreground line-clamp-1">
                         {task.description}
                       </p>

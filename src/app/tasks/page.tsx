@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { getBusinessId } from '@/lib/tenant'
@@ -28,6 +29,13 @@ export default function TasksListPage() {
   const [status, setStatus] = useState('')
 
   useEffect(() => {
+    try {
+      const d = localStorage.getItem('currentDepartment') || ''
+      setDepart(d)
+    } catch {}
+  }, [])
+
+  useEffect(() => {
     const id = getBusinessId()
     setBusinessId(id)
     if (!id) {
@@ -41,7 +49,7 @@ export default function TasksListPage() {
       .channel('tasks-list-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks', filter: `business_id=eq.${id}` }, () => fetchTasks(id))
       .subscribe()
-    return () => channel.unsubscribe()
+    return () => { void channel.unsubscribe() }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -75,11 +83,18 @@ export default function TasksListPage() {
     return list
   }, [tasks, query, depart, status])
 
+  // Persist department selection + analytics
+  useEffect(() => {
+    try { localStorage.setItem('currentDepartment', depart) } catch {}
+    analytics.track('tasks_filter_changed', { department: depart || 'all', status: status || 'all' })
+  }, [depart, status])
+
   const updateStatus = async (task: Task, next: Task['status']) => {
     try {
       const supabase = createClient()
       const { error } = await supabase.from('tasks').update({ status: next }).eq('id', task.id)
       if (error) throw error
+      analytics.track('task_status_changed', { id: task.id, from: task.status, to: next })
     } catch {}
   }
 
@@ -128,7 +143,7 @@ export default function TasksListPage() {
               {filtered.map((t) => (
                 <li key={t.id} className="grid grid-cols-12 items-center px-4 py-3 border-t hover:bg-muted/30">
                   <div className="col-span-4">
-                    <div className="font-medium truncate">{t.title}</div>
+                    <div className="font-medium truncate"><Link className="hover:underline" href={`/tasks/${t.id}`}>{t.title}</Link></div>
                     <div className="text-sm text-muted-foreground truncate">{t.description}</div>
                   </div>
                   <div className="col-span-3 capitalize text-sm">{t.department || '—'}</div>

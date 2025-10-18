@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { WorkspaceSwitcher } from '@/components/layout/WorkspaceSwitcher'
 import { SpaceSwitcher } from '@/components/layout/SpaceSwitcher'
 import { cn } from '@/lib/utils'
-import { LayoutDashboard, ListTodo, PlusCircle, Settings, Sparkles } from 'lucide-react'
+import { LayoutDashboard, ListTodo, PlusCircle, Settings, Sparkles, FilePlus } from 'lucide-react'
 import { ReactNode } from 'react'
 
 export function DashboardShell({ children }: { children: ReactNode }) {
@@ -36,6 +36,10 @@ export function DashboardShell({ children }: { children: ReactNode }) {
           <Link href="/tasks" className={cn('flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted/60', isActive('/tasks') && 'bg-muted')}>
             <ListTodo className="w-4 h-4" />
             <span>Tasks</span>
+          </Link>
+          <Link href="/tasks/templates" className={cn('flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted/60', isActive('/tasks/templates') && 'bg-muted')}>
+            <FilePlus className="w-4 h-4" />
+            <span>Templates</span>
           </Link>
           <Link href="/tasks/new" className={cn('flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted/60', isActive('/tasks/new') && 'bg-muted')}>
             <PlusCircle className="w-4 h-4" />
