@@ -79,6 +79,15 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
           return
         }
         bizId = newBiz.id
+
+        // Ensure membership record exists for owner
+        try {
+          await supabase
+            .from('business_members')
+            .insert({ business_id: bizId, user_id: user.id, role: 'owner' })
+        } catch (mErr) {
+          console.warn('[Onboarding] business_members insert warning:', mErr)
+        }
       }
 
       localStorage.setItem('businessId', bizId as string)
@@ -187,6 +196,15 @@ export function OnboardingWizard({ isOpen, onClose, businessId }: OnboardingWiza
         }
         console.log('✅ [Onboarding] Business created:', newBusiness.id)
         localStorage.setItem('businessId', newBusiness.id)
+
+        // Ensure membership record exists for owner
+        try {
+          await supabase
+            .from('business_members')
+            .insert({ business_id: newBusiness.id, user_id: user.id, role: 'owner' })
+        } catch (mErr) {
+          console.warn('[Onboarding] business_members insert warning:', mErr)
+        }
       }
 
       localStorage.setItem('companyProfileCompleted', 'true')

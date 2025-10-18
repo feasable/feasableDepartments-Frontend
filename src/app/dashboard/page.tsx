@@ -9,6 +9,8 @@ import { getBusinessId } from '@/lib/tenant'
 import { ensureUserBusiness } from '@/lib/auth-helpers'
 import { toast } from 'sonner'
 import { OnboardingWizard } from '@/components/onboarding/OnboardingWizard'
+import { checkCompleteness } from '@/lib/profile'
+import { ProfileCompletionBanner } from '@/components/dashboard/ProfileCompletionBanner'
 import { motion } from 'framer-motion'
 import { 
   CheckCircle2, 
@@ -50,6 +52,8 @@ export default function DashboardPage() {
     in_progress: 0,
     queued: 0
   })
+  const [showBanner, setShowBanner] = useState(false)
+  const [missingInfo, setMissingInfo] = useState<{ profileFields: string[]; businessFields: string[] }>({ profileFields: [], businessFields: [] })
 
   useEffect(() => {
     checkAuth()
@@ -64,22 +68,7 @@ export default function DashboardPage() {
     if (!session) {
       console.log('❌ [Dashboard] No session yet, waiting for auth state...')
       let resolved = false
-      const timeout = setTimeout(() => {
-        if (!resolved) {
-          console.log('⏱️ [Dashboard] Auth wait timed out, redirecting to /auth')
-          router.push('/auth')
-        }
-      }, 1500)
-
-      const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
-        if (newSession?.user) {
-          resolved = true
-          clearTimeout(timeout)
-          console.log('✅ [Dashboard] Session arrived via onAuthStateChange')
-          setUser(newSession.user)
-          proceed()
-        }
-      })
+      let subscription: { unsubscribe: () => void } | undefined
 
       const proceed = async () => {
         // Ensure business context once session exists
@@ -91,6 +80,14 @@ export default function DashboardPage() {
             console.log('✅ [Dashboard] Business found:', id)
             setBusinessId(id)
             fetchTasks(id)
+            // Check completeness
+            try {
+              const c = await checkCompleteness()
+              if (!c.profileComplete || !c.businessComplete) {
+                setMissingInfo(c.missing)
+                setShowBanner(true)
+              }
+            } catch {}
           } catch (error: any) {
             console.log('⚠️ [Dashboard] ensureUserBusiness error:', error.message)
             if (error.message === 'NO_WORKSPACE') {
@@ -103,9 +100,33 @@ export default function DashboardPage() {
         } else {
           setBusinessId(id)
           fetchTasks(id)
+          try {
+            const c = await checkCompleteness()
+            if (!c.profileComplete || !c.businessComplete) {
+              setMissingInfo(c.missing)
+              setShowBanner(true)
+            }
+          } catch {}
         }
-        sub.subscription.unsubscribe()
+        subscription?.unsubscribe()
       }
+      const { data } = supabase.auth.onAuthStateChange((_event, newSession) => {
+        if (newSession?.user) {
+          resolved = true
+          clearTimeout(timeout)
+          console.log('✅ [Dashboard] Session arrived via onAuthStateChange')
+          setUser(newSession.user)
+          void proceed()
+        }
+      })
+      subscription = data.subscription
+
+      const timeout = setTimeout(() => {
+        if (!resolved) {
+          console.log('⏱️ [Dashboard] Auth wait timed out (4s), redirecting to /auth')
+          router.push('/auth')
+        }
+      }, 4000)
       return
     }
     
@@ -123,6 +144,13 @@ export default function DashboardPage() {
         console.log('✅ [Dashboard] Business found:', id)
         setBusinessId(id)
         fetchTasks(id)
+        try {
+          const c = await checkCompleteness()
+          if (!c.profileComplete || !c.businessComplete) {
+            setMissingInfo(c.missing)
+            setShowBanner(true)
+          }
+        } catch {}
       } catch (error: any) {
         if (error.message === 'NO_WORKSPACE') {
           console.log('📝 [Dashboard] No workspace found, showing onboarding...')
@@ -141,6 +169,13 @@ export default function DashboardPage() {
       console.log('✅ [Dashboard] Using cached business ID')
       setBusinessId(id)
       fetchTasks(id)
+      try {
+        const c = await checkCompleteness()
+        if (!c.profileComplete || !c.businessComplete) {
+          setMissingInfo(c.missing)
+          setShowBanner(true)
+        }
+      } catch {}
     }
   }
 
@@ -190,6 +225,13 @@ export default function DashboardPage() {
     <>
       <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {showBanner && (
+            <ProfileCompletionBanner
+              missing={missingInfo}
+              onStart={() => setShowOnboarding(true)}
+              onDismiss={() => setShowBanner(false)}
+            />
+          )}
           {/* Welcome Section */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}

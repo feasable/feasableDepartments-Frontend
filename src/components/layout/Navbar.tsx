@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { GlassButton } from '@/components/ui/glass-button'
 import { createClient } from '@/lib/supabase/client'
+import { WorkspaceSwitcher } from '@/components/layout/WorkspaceSwitcher'
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -92,6 +93,11 @@ export function Navbar() {
               </GlassButton>
             </div>
 
+            {/* Workspace Switcher */}
+            <div className="hidden md:flex items-center mx-3">
+              <WorkspaceSwitcher />
+            </div>
+
             {/* CTA Buttons in Glass */}
             <div className="hidden md:flex items-center gap-3">
               {userEmail ? (
@@ -107,10 +113,10 @@ export function Navbar() {
               ) : (
                 <>
                   <GlassButton asChild size="sm">
-                    <Link href="/login">Sign In</Link>
+                    <Link href="/auth">Sign In</Link>
                   </GlassButton>
                   <GlassButton asChild size="sm">
-                    <Link href="/signup">Get Started</Link>
+                    <Link href="/auth">Get Started</Link>
                   </GlassButton>
                 </>
               )}
@@ -172,12 +178,12 @@ export function Navbar() {
             ) : (
               <>
                 <GlassButton asChild size="default" className="w-full">
-                  <Link href="/login" onClick={() => setMobileMenu(false)}>
+                  <Link href="/auth" onClick={() => setMobileMenu(false)}>
                     Sign In
                   </Link>
                 </GlassButton>
                 <GlassButton asChild size="default" className="w-full">
-                  <Link href="/signup" onClick={() => setMobileMenu(false)}>
+                  <Link href="/auth" onClick={() => setMobileMenu(false)}>
                     Get Started
                   </Link>
                 </GlassButton>

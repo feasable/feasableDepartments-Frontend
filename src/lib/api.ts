@@ -12,7 +12,7 @@ export async function backend<T = any>(path: string, init?: RequestInit): Promis
       const { toast } = await import('sonner')
       toast.error('Please sign in to continue')
       setTimeout(() => {
-        window.location.href = '/login'
+        window.location.href = '/auth'
       }, 800)
       throw new Error('Unauthorized')
     }
