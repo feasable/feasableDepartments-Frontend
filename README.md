@@ -216,3 +216,6 @@ Proprietary - lunoLabs © 2024
 - Email: support@luno.org
 - Documentation: [docs.luno.org](https://docs.luno.org)
 - Discord: [Join our community](https://discord.gg/luno)
+
+~authored by
+feasablelabs & ~ parastus
