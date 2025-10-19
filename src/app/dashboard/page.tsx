@@ -59,117 +59,29 @@ export default function DashboardPage() {
 
   useEffect(() => {
     analytics.track('dashboard_viewed')
-    checkAuth()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const checkAuth = async () => {
-    console.log('🔍 [Dashboard] Checking authentication...')
-    const supabase = createClient()
-    const { data: { session } } = await supabase.auth.getSession()
-
-    if (!session) {
-      console.log('❌ [Dashboard] No session yet, waiting for auth state...')
-      let resolved = false
-      let subscription: { unsubscribe: () => void } | undefined
-
-      const proceed = async () => {
-        // Ensure business context once session exists
-        let id = getBusinessId()
-        console.log('🔍 [Dashboard] Business ID from localStorage:', id)
-        if (!id) {
-          try {
-            id = await ensureUserBusiness()
-            console.log('✅ [Dashboard] Business found:', id)
-            setBusinessId(id)
-            fetchTasks(id)
-            // Check completeness
-            try {
-              const c = await checkCompleteness()
-              if (!c.profileComplete || !c.businessComplete) {
-                setMissingInfo(c.missing)
-                setShowBanner(true)
-              }
-            } catch {}
-          } catch (error: any) {
-            console.log('⚠️ [Dashboard] ensureUserBusiness error:', error.message)
-            if (error.message === 'NO_WORKSPACE') {
-              setShowOnboarding(true)
-              setLoading(false)
-            } else {
-              router.push('/auth')
-            }
-          }
-        } else {
-          setBusinessId(id)
-          fetchTasks(id)
-          try {
-            const c = await checkCompleteness()
-            if (!c.profileComplete || !c.businessComplete) {
-              setMissingInfo(c.missing)
-              setShowBanner(true)
-            }
-          } catch {}
-        }
-        subscription?.unsubscribe()
-      }
-      const { data } = supabase.auth.onAuthStateChange((_event, newSession) => {
-        if (newSession?.user) {
-          resolved = true
-          clearTimeout(timeout)
-          console.log('✅ [Dashboard] Session arrived via onAuthStateChange')
-          setUser(newSession.user)
-          void proceed()
-        }
-      })
-      subscription = data.subscription
-
-      const timeout = setTimeout(() => {
-        if (!resolved) {
-          console.log('⏱️ [Dashboard] Auth wait timed out (10s), redirecting to /auth')
-          router.push('/auth')
-        }
-      }, 10000)
-      return
-    }
-    
-    console.log('✅ [Dashboard] User authenticated:', session.user.id)
-    setUser(session.user)
-    
-    // Ensure business context
-    let id = getBusinessId()
-    console.log('🔍 [Dashboard] Business ID from localStorage:', id)
-    
-    if (!id) {
-      console.log('🔍 [Dashboard] No business ID in localStorage, calling ensureUserBusiness...')
-      try {
-        id = await ensureUserBusiness()
-        console.log('✅ [Dashboard] Business found:', id)
-        setBusinessId(id)
-        fetchTasks(id)
-        try {
-          const c = await checkCompleteness()
-          if (!c.profileComplete || !c.businessComplete) {
-            setMissingInfo(c.missing)
-            setShowBanner(true)
-          }
-        } catch {}
-      } catch (error: any) {
-        if (error.message === 'NO_WORKSPACE') {
-          console.log('📝 [Dashboard] No workspace found, showing onboarding...')
-          setShowOnboarding(true)
-          setLoading(false)
-        } else if (error.message === 'UNAUTHENTICATED') {
-          console.error('❌ [Dashboard] Unauthenticated, redirecting to /auth')
-          router.push('/auth')
-        } else {
-          console.error('❌ [Dashboard] Unexpected error, redirecting to /auth')
-          router.push('/auth')
-        }
+    ;(async () => {
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        router.replace('/auth?redirect=/dashboard')
         return
       }
-    } else {
-      console.log('✅ [Dashboard] Using cached business ID')
+      setUser(session.user)
+      // Ensure business context
+      let id = getBusinessId()
+      if (!id) {
+        try {
+          id = await ensureUserBusiness()
+        } catch (error: any) {
+          if (error.message === 'NO_WORKSPACE') {
+            setShowOnboarding(true)
+            setLoading(false)
+            return
+          }
+          router.push('/auth')
+          return
+        }
+      }
       setBusinessId(id)
       fetchTasks(id)
       try {
@@ -179,8 +91,11 @@ export default function DashboardPage() {
           setShowBanner(true)
         }
       } catch {}
-    }
-  }
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Removed checkAuth with loops; a single session check is handled in the effect above.
 
   const fetchTasks = async (id: string) => {
     try {

@@ -93,6 +93,11 @@ create table if not exists public.business_members (
   primary key (business_id, user_id)
 );
 
+-- In case an older table exists without these columns, add them before using is_member()
+alter table if exists public.business_members add column if not exists role member_role not null default 'member';
+alter table if exists public.business_members add column if not exists status text not null default 'active';
+alter table if exists public.business_members add column if not exists created_at timestamptz not null default now();
+
 -- Now that membership table exists, define helper function
 create or replace function is_member(biz uuid, uid uuid)
 returns boolean

@@ -1,7 +1,7 @@
 'use client';
 
 import { AuthComponent } from '@/components/ui/sign-up-21st';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
 const CustomLogo = () => (
@@ -18,10 +18,11 @@ const CustomLogo = () => (
 
 export default function AuthPage() {
   const router = useRouter();
+  const search = useSearchParams();
+  const redirect = search?.get('redirect') || '/dashboard'
 
   const handleAuthSuccess = () => {
-    // Redirect to dashboard after successful auth
-    router.push('/dashboard');
+    router.push(redirect);
   };
 
   return (
