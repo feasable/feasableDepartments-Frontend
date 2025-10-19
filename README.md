@@ -218,4 +218,4 @@ Proprietary - lunoLabs © 2024
 - Discord: [Join our community](https://discord.gg/luno)
 
 ~authored by
-feasablelabs & ~
+feasablelabs & ~ parastus
